@@ -48,7 +48,7 @@ export default function SchedulePage() {
         </div>
 
         <div className="fu" style={{ marginTop: 16, padding: 18, background: C.sagePale, borderRadius: 12, fontSize: 13, color: C.textMid, lineHeight: 1.6, animationDelay: "0.16s" }}>
-          <strong style={{ color: C.forest }}>Late Testing:</strong> Available May 18--22, 2026 for students with qualifying circumstances. Contact your AP Coordinator. Source: College Board AP Central.
+          <strong style={{ color: C.forest }}>Late Testing:</strong> Available May 18-22, 2026 for students with qualifying circumstances. Contact your AP Coordinator. Source: College Board AP Central.
         </div>
       </section>
     </Shell>

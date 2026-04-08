@@ -6,6 +6,7 @@ const NAV_ITEMS = [
   { label: "Courses", to: "/" },
   { label: "Schedule", to: "/schedule" },
   { label: "Score Predictor", to: "/predictor" },
+  { label: "Privacy", to: "/privacy" },
 ] as const;
 
 export default function Navbar() {

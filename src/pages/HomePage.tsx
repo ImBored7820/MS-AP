@@ -97,6 +97,9 @@ export default function HomePage() {
                 GitHub
               </a>
             </p>
+            <p style={{ marginTop: 8, fontSize: 12, color: C.textLight, fontFamily: "'Outfit', sans-serif" }}>
+              Some features may not work in the embedded preview. <a href="https://wroc.musaserver.org" target="_blank" rel="noopener noreferrer" style={{ color: C.sage, textDecoration: "underline", fontWeight: 500 }}>Open the full site</a> for the complete experience.
+            </p>
           </div>
         </div>
       </section>

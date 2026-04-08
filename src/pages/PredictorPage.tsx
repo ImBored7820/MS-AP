@@ -181,6 +181,10 @@ export default function PredictorPage() {
         <div className="fu" style={{ marginTop: 16, padding: 18, background: C.sagePale, borderRadius: 12, fontSize: 13, color: C.textMid, lineHeight: 1.65, animationDelay: "0.12s" }}>
           <strong style={{ color: C.forest }}>How this works:</strong> Each AP exam weights MC and FRQ sections differently. For example, History exams weight FRQ at 60% while Economics exams weight MC at 67%. Your percentage scores are weighted accordingly to produce a composite, then compared against approximate cutoffs derived from historical exam data. The College Board does not publish exact cutoffs and they shift yearly, so treat this as a rough guide only.
         </div>
+
+        <div className="fu" style={{ marginTop: 12, padding: 18, background: C.borderSoft, borderRadius: 12, fontSize: 12, color: C.textMid, lineHeight: 1.65, animationDelay: "0.18s", border: `1px solid ${C.sage}` }}>
+          <strong style={{ color: C.forest }}>⚠️ Disclaimer:</strong> This predictor is not affiliated with or endorsed by the College Board. Predictions are approximate and subject to annual variation. Students near score boundaries should treat results with a ±5-10% margin of error. See our <a href="/privacy" style={{ color: C.sage, textDecoration: "underline", fontWeight: 500 }}>Privacy & Policies</a> page for more details.
+        </div>
       </section>
     </Shell>
   );
