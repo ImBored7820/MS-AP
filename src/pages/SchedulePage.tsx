@@ -11,7 +11,7 @@ export default function SchedulePage() {
             2026 AP Exam Schedule
           </h2>
           <p style={{ fontSize: 14, color: C.textLight, marginBottom: 28 }}>
-            All exams administered May 4--15, 2026. Morning sessions at 8:00 AM, afternoon sessions at 12:00 PM local time.
+            All exams administered May 4-15, 2026. Morning sessions at 8:00 AM, afternoon sessions at 12:00 PM local time.
           </p>
         </div>
 

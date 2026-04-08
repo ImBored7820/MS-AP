@@ -9,8 +9,8 @@ export default function Footer() {
           <div style={{ fontSize: 12, color: C.textLight }}>Exam dates and course info sourced from College Board. Not affiliated with or endorsed by College Board.</div>
         </div>
         <div style={{ textAlign: "right" }}>
-          <div style={{ fontSize: 12, color: C.textLight }}>2026 AP Exams: May 4--15</div>
-          <div style={{ fontSize: 11, color: C.textLight, marginTop: 4 }}>{"\u00A9"} Musa Ali 2026</div>
+          <div style={{ fontSize: 12, color: C.textLight }}>2026 AP Exams: May 4-15</div>
+          <div style={{ fontSize: 11, color: C.textLight, marginTop: 4 }}>{"\u00A9"} Musa Ali 2026 <a href="https://github.com/ImBored7820/MS-AP" target="_blank" rel="noopener noreferrer" style={{ color: C.sage, marginLeft: 4, textDecoration: "underline", fontWeight: 500 }}>GitHub</a></div>
         </div>
       </div>
     </footer>

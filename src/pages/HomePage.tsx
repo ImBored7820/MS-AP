@@ -33,7 +33,7 @@ export default function HomePage() {
           <div style={{ flex: "1 1 400px" }}>
             <div className="fu">
               <p style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: C.sage, marginBottom: 12 }}>
-                2025--2026 Academic Year
+                2025-2026 Academic Year
               </p>
               <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: 44, fontWeight: 500, lineHeight: 1.15, letterSpacing: "-0.02em", color: C.forest, marginBottom: 14 }}>
                 Your guide to<br />Advanced Placement
@@ -46,7 +46,7 @@ export default function HomePage() {
               {[
                 { val: "38", lbl: "Courses" },
                 { val: daysLeft.toString(), lbl: "Days to Exams" },
-                { val: "May 4--15", lbl: "Exam Window" },
+                { val: "May 4-15", lbl: "Exam Window" },
               ].map((s) => (
                 <div key={s.lbl} style={{ padding: "16px 22px", background: C.card, borderRadius: 12, boxShadow: C.shadow, minWidth: 120 }}>
                   <div style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 500, color: C.forest }}>{s.val}</div>
@@ -78,7 +78,7 @@ export default function HomePage() {
               />
             </div>
             <p style={{ marginTop: 16, fontSize: 14, color: C.textMid, fontFamily: "'Outfit', sans-serif" }}>
-              My game Demo,{" "}
+              My Game Demo,{" "}
               <a
                 href="https://wroc.musaserver.org"
                 target="_blank"
@@ -86,6 +86,15 @@ export default function HomePage() {
                 style={{ color: C.sage, textDecoration: "underline", fontWeight: 500 }}
               >
                 Website
+              </a>
+              {" | "}
+              <a
+                href="https://github.com/ImBored7820/WRoC"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: C.sage, textDecoration: "underline", fontWeight: 500 }}
+              >
+                GitHub
               </a>
             </p>
           </div>
