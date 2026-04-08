@@ -8,7 +8,12 @@
       "Bash(rm -rf ap-temp)",
       "Bash(npm install:*)",
       "Bash(rm -f src/App.css src/index.css src/App.tsx src/main.tsx src/assets/react.svg public/vite.svg)",
-      "Bash(mkdir -p src/components src/data src/pages src/lib)"
+      "Bash(mkdir -p src/components src/data src/pages src/lib)",
+      "Bash(rm -f src/assets/react.svg src/assets/vite.svg src/assets/hero.png public/vite.svg)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run:*)",
+      "Bash(npx vite:*)",
+      "mcp__Claude_Preview__preview_start"
     ]
   }
 }

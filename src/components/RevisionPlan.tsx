@@ -18,7 +18,7 @@ export default function RevisionPlan({ weeks }: RevisionPlanProps) {
   return (
     <div>
       <div className="flex gap-1.5 border-b border-border-soft pb-0">
-        {weeks.map((w, i) => (
+        {weeks.map((_, i) => (
           <button
             key={i}
             onClick={() => setActive(i)}
