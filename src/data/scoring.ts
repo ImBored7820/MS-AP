@@ -1,0 +1,45 @@
+export interface ScoringData {
+  mcWeight: number;
+  frqWeight: number;
+  cutoffs: [number, number, number, number];
+}
+
+export const SCORING: Record<string, ScoringData> = {
+  "AP-Biology": { mcWeight: 50, frqWeight: 50, cutoffs: [74, 58, 42, 28] },
+  "AP-Chemistry": { mcWeight: 50, frqWeight: 50, cutoffs: [72, 56, 40, 26] },
+  "AP-Environmental-Science": { mcWeight: 50, frqWeight: 50, cutoffs: [68, 52, 38, 24] },
+  "AP-Physics-1": { mcWeight: 50, frqWeight: 50, cutoffs: [70, 55, 38, 25] },
+  "AP-Physics-2": { mcWeight: 50, frqWeight: 50, cutoffs: [70, 55, 38, 25] },
+  "AP-Physics-C-Mechanics": { mcWeight: 50, frqWeight: 50, cutoffs: [68, 52, 36, 22] },
+  "AP-Physics-C-EM": { mcWeight: 50, frqWeight: 50, cutoffs: [68, 52, 36, 22] },
+  "AP-Calculus-AB": { mcWeight: 50, frqWeight: 50, cutoffs: [70, 55, 38, 25] },
+  "AP-Calculus-BC": { mcWeight: 50, frqWeight: 50, cutoffs: [66, 52, 36, 22] },
+  "AP-Precalculus": { mcWeight: 63, frqWeight: 37, cutoffs: [72, 56, 40, 26] },
+  "AP-Statistics": { mcWeight: 50, frqWeight: 50, cutoffs: [72, 56, 40, 26] },
+  "AP-English-Language": { mcWeight: 45, frqWeight: 55, cutoffs: [72, 56, 42, 28] },
+  "AP-English-Literature": { mcWeight: 45, frqWeight: 55, cutoffs: [72, 56, 42, 28] },
+  "AP-US-History": { mcWeight: 40, frqWeight: 60, cutoffs: [74, 58, 42, 28] },
+  "AP-World-History": { mcWeight: 40, frqWeight: 60, cutoffs: [74, 58, 42, 28] },
+  "AP-European-History": { mcWeight: 40, frqWeight: 60, cutoffs: [74, 58, 42, 28] },
+  "AP-US-Government": { mcWeight: 50, frqWeight: 50, cutoffs: [72, 56, 40, 26] },
+  "AP-Comparative-Government": { mcWeight: 50, frqWeight: 50, cutoffs: [72, 56, 40, 26] },
+  "AP-Macroeconomics": { mcWeight: 67, frqWeight: 33, cutoffs: [72, 56, 42, 28] },
+  "AP-Microeconomics": { mcWeight: 67, frqWeight: 33, cutoffs: [72, 56, 42, 28] },
+  "AP-Human-Geography": { mcWeight: 50, frqWeight: 50, cutoffs: [72, 56, 40, 26] },
+  "AP-Psychology": { mcWeight: 67, frqWeight: 33, cutoffs: [72, 56, 42, 28] },
+  "AP-African-American-Studies": { mcWeight: 50, frqWeight: 50, cutoffs: [70, 54, 38, 24] },
+  "AP-Computer-Science-A": { mcWeight: 50, frqWeight: 50, cutoffs: [68, 52, 36, 22] },
+  "AP-Computer-Science-Principles": { mcWeight: 70, frqWeight: 30, cutoffs: [72, 56, 40, 26] },
+  "AP-Art-History": { mcWeight: 50, frqWeight: 50, cutoffs: [72, 56, 42, 28] },
+  "AP-Music-Theory": { mcWeight: 45, frqWeight: 55, cutoffs: [72, 56, 42, 28] },
+  "AP-Spanish-Language": { mcWeight: 50, frqWeight: 50, cutoffs: [74, 58, 42, 28] },
+  "AP-French-Language": { mcWeight: 50, frqWeight: 50, cutoffs: [74, 58, 42, 28] },
+  "AP-German-Language": { mcWeight: 50, frqWeight: 50, cutoffs: [74, 58, 42, 28] },
+  "AP-Chinese-Language": { mcWeight: 50, frqWeight: 50, cutoffs: [74, 58, 42, 28] },
+  "AP-Japanese-Language": { mcWeight: 50, frqWeight: 50, cutoffs: [74, 58, 42, 28] },
+  "AP-Italian-Language": { mcWeight: 50, frqWeight: 50, cutoffs: [74, 58, 42, 28] },
+  "AP-Spanish-Literature": { mcWeight: 50, frqWeight: 50, cutoffs: [74, 58, 42, 28] },
+  "AP-Latin": { mcWeight: 50, frqWeight: 50, cutoffs: [74, 58, 42, 28] },
+  "AP-Seminar": { mcWeight: 0, frqWeight: 100, cutoffs: [80, 65, 50, 35] },
+  "AP-Research": { mcWeight: 0, frqWeight: 100, cutoffs: [80, 65, 50, 35] },
+};

@@ -1,0 +1,18 @@
+export const C = {
+  bg: "#F7F6F1",
+  bgWarm: "#F0EFE7",
+  card: "#FFFFFF",
+  cardHover: "#FCFCF9",
+  forest: "#40531B",
+  sage: "#618B4A",
+  sageSoft: "#8AAF76",
+  sageLight: "#D4E4CC",
+  sagePale: "#EBF2E6",
+  mint: "#A8E6B4",
+  mintSoft: "#C5F0CE",
+  text: "#2C3A1E",
+  textMid: "#5A6B4D",
+  textLight: "#8A9A7C",
+  border: "#DDE5D6",
+  borderSoft: "#E8EDE3",
+} as const;

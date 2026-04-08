@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm create:*)",
+      "Bash(npx --yes create-vite@latest ap-temp --template react-ts)",
+      "Bash(cp -r ap-temp/* .)",
+      "Bash(cp ap-temp/.gitignore .)",
+      "Bash(rm -rf ap-temp)",
+      "Bash(npm install:*)",
+      "Bash(rm -f src/App.css src/index.css src/App.tsx src/main.tsx src/assets/react.svg public/vite.svg)",
+      "Bash(mkdir -p src/components src/data src/pages src/lib)"
+    ]
+  }
+}
