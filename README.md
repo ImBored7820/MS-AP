@@ -44,23 +44,6 @@ musaserver.org/apush ->  musaserver.org/AP-US-History
 
 All aliases are case-insensitive. See `src/data/slugAliases.ts` for the full map.
 
-## Nginx Config
-
-For client-side routing to work correctly, configure Nginx to fall back to `index.html`:
-
-```nginx
-server {
-    listen 80;
-    server_name musaserver.org;
-    root /var/www/ap/dist;
-    index index.html;
-
-    location / {
-        try_files $uri $uri/ /index.html;
-    }
-}
-```
-
 ---
 
 ## Adding Course Content
