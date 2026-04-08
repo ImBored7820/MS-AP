@@ -1,13 +1,16 @@
 # AP Learning Center
 
-A Vite + React 19 + TypeScript + Tailwind CSS v4 site covering all 38 AP courses with exam schedules, score predictor, and study resources.
+A web application covering all 37 AP courses with exam schedules, a score predictor, study resources, and a markdown-based content system for unit notes. Built with React 19, TypeScript, and Vite.
+
+**Live at:** `musaserver.org`
 
 ## Tech Stack
 
 - React 19 + React Router v7
-- Tailwind CSS v4 (`@tailwindcss/vite`) with `@theme` directive
+- TypeScript 6
 - Framer Motion v12
-- `date-fns` v4
+- date-fns v4
+- html2canvas + jsPDF (PDF export)
 
 ## Development
 
@@ -20,19 +23,21 @@ npm run preview   # preview production build locally
 
 ## URL Structure
 
-Courses are served at the root slug directly:
-
 ```
-musaserver.org/AP-Physics-2
-musaserver.org/AP-Environmental-Science
-musaserver.org/AP-Calculus-AB
+musaserver.org/                              Home (all courses)
+musaserver.org/schedule                      Exam schedule
+musaserver.org/predictor                     Score predictor
+musaserver.org/AP-Biology                    Course overview page
+musaserver.org/AP-Biology/Unit-1             Unit page (redirects to first module or shows "Coming Soon")
+musaserver.org/AP-Biology/Unit-1/1.0         Module reader (renders markdown)
+musaserver.org/AP-Biology/Unit-1/1.1         Module reader (next module)
 ```
 
 Shorthand aliases redirect to the canonical slug:
 
 ```
-musaserver.org/apes  →  musaserver.org/AP-Environmental-Science
-musaserver.org/apush →  musaserver.org/AP-US-History
+musaserver.org/apes  ->  musaserver.org/AP-Environmental-Science
+musaserver.org/apush ->  musaserver.org/AP-US-History
 ```
 
 All aliases are case-insensitive. See `src/data/slugAliases.ts` for the full map.
@@ -54,24 +59,246 @@ server {
 }
 ```
 
-## Content Updates (Markdown)
+---
 
-Unit content lives in `public/content/<slug>/unit-N.md` and is fetched at runtime — no rebuild required:
+## Adding Course Content
+
+The content system uses markdown files served from the `dist/content/` folder. Content is loaded at runtime — **no rebuild is required** to add or update notes. Just edit the files on the server and refresh the browser.
+
+### Step 1: Find the course folder
+
+Content is organized by course slug and unit number:
 
 ```
-public/
-  content/
-    AP-Biology/
-      unit-1.md
-      unit-2.md
-      ...
+dist/content/<CourseSlug>/Unit-<N>/
 ```
 
-To update content: edit the relevant `.md` file on the server and refresh the browser.
+For example, AP Environmental Science Unit 1:
+
+```
+dist/content/AP-Environmental-Science/Unit-1/
+```
+
+Every course and unit folder already exists with an empty `index.json` file. You do not need to create folders.
+
+### Step 2: Create your markdown files
+
+Create `.md` files inside the unit folder. Files are named with the unit and module number:
+
+```
+dist/content/AP-Environmental-Science/Unit-1/
+  1.0.md    <-- Unit overview (first file users see)
+  1.1.md    <-- Module 1.1
+  1.2.md    <-- Module 1.2
+  1.3.md    <-- Module 1.3
+```
+
+The naming convention is `<unit>.<module>.md`. The `X.0.md` file is treated as the unit overview and labeled as such in the sidebar.
+
+### Step 3: Update index.json
+
+After adding markdown files, update the `index.json` in the same folder to list them. **This is the only step that makes the files visible to the app.**
+
+Before (empty unit, shows "Coming Soon"):
+
+```json
+{"files": []}
+```
+
+After adding files:
+
+```json
+{"files": ["1.0.md", "1.1.md", "1.2.md", "1.3.md"]}
+```
+
+Rules:
+- List filenames in numerical order
+- Include the `.md` extension
+- Every file listed must actually exist in the folder
+
+### Step 4: Refresh the browser
+
+Navigate to the course and click the unit. The app will read `index.json` and load the markdown files automatically.
+
+### Markdown formatting guide
+
+The renderer supports standard markdown syntax:
+
+```markdown
+# Module Title (H1 — shown once at top)
+
+## Section Heading (H2 — appears in sidebar table of contents)
+
+### Sub-section (H3 — also appears in sidebar, indented)
+
+Regular paragraph text. Use **bold** for emphasis and *italic* for terms.
+
+Use `inline code` for technical terms or values.
+
+> Blockquotes are styled with a green left border and italic text.
+> Good for key takeaways or important notes.
+
+- Bullet point one
+- Bullet point two
+- Bullet point three
+
+1. Numbered item one
+2. Numbered item two
+3. Numbered item three
+
+| Column A | Column B | Column C |
+|----------|----------|----------|
+| Cell 1   | Cell 2   | Cell 3   |
+| Cell 4   | Cell 5   | Cell 6   |
+
+Code blocks with triple backticks:
+
+\```python
+def hello():
+    print("Hello World")
+\```
+
+---
+
+Horizontal rules create visual section breaks.
+
+[Link text](https://example.com)
+
+![Image alt text](https://example.com/image.png)
+```
+
+### Example: Adding Unit 1 content to AP Environmental Science
+
+On the server:
+
+```bash
+cd /var/www/ap/dist/content/AP-Environmental-Science/Unit-1/
+
+# Create the overview file
+cat > 1.0.md << 'EOF'
+# Unit 1: The Living World - Ecosystems
+
+## Introduction
+
+This unit introduces the foundational concepts of ecosystems, including energy flow, nutrient cycling, and ecosystem services.
+
+## Key Topics
+
+### Energy Flow
+
+- Producers convert solar energy to chemical energy
+- Energy transfers between trophic levels are inefficient (10% rule)
+- Food chains and food webs model energy relationships
+
+### Biogeochemical Cycles
+
+- Carbon cycle
+- Nitrogen cycle
+- Phosphorus cycle
+- Water cycle
+
+## Exam Tips
+
+- Know the difference between **gross primary productivity** and **net primary productivity**
+- Practice interpreting `energy pyramid` diagrams
+EOF
+
+# Update index.json to register the file
+echo '{"files": ["1.0.md"]}' > index.json
+```
+
+Refresh the browser. Navigating to `musaserver.org/AP-Environmental-Science/Unit-1` will now show the content instead of "Coming Soon".
+
+### Updating existing content
+
+Edit the `.md` file directly on the server. No changes to `index.json` are needed unless you are adding or removing files. Refresh the browser to see updates.
+
+### Removing content
+
+Delete the `.md` file and remove its entry from `index.json`. If you remove all files, set the array back to empty:
+
+```json
+{"files": []}
+```
+
+### PDF export
+
+Every unit page includes a "Download Unit PDF" button. It combines all markdown files for that unit into a single styled PDF. The PDF uses the same fonts and colors as the website. No configuration is needed — it works automatically based on `index.json`.
+
+---
+
+## Project Structure
+
+```
+AP/
+├── public/
+│   └── content/                        # Runtime content (served statically)
+│       ├── AP-Biology/
+│       │   ├── Unit-1/
+│       │   │   └── index.json          # Lists .md files for this unit
+│       │   ├── Unit-2/
+│       │   │   └── index.json
+│       │   └── ...
+│       ├── AP-Chemistry/
+│       │   └── ...
+│       └── ... (37 courses total)
+│
+├── src/
+│   ├── App.tsx                         # Router: all route definitions
+│   ├── main.tsx                        # Entry point
+│   ├── index.css                       # Global styles, fonts, animations
+│   │
+│   ├── pages/
+│   │   ├── HomePage.tsx                # Course grid with hero section
+│   │   ├── CoursePage.tsx              # Course detail (units, exam info, resources)
+│   │   ├── UnitPage.tsx                # Unit landing (redirect or "Coming Soon")
+│   │   ├── ModulePage.tsx              # Module reader (sidebar + markdown content)
+│   │   ├── SchedulePage.tsx            # Exam schedule table
+│   │   ├── PredictorPage.tsx           # Score predictor tool
+│   │   └── NotFoundPage.tsx            # 404 page
+│   │
+│   ├── components/
+│   │   ├── Shell.tsx                   # Page wrapper (Navbar + Footer)
+│   │   ├── Navbar.tsx                  # Sticky top navigation
+│   │   ├── Footer.tsx                  # Site footer
+│   │   ├── SlugRouter.tsx              # Resolves /:slug to course or alias
+│   │   ├── MarkdownRenderer.tsx        # Converts markdown string to styled React
+│   │   ├── ModuleSidebar.tsx           # Sticky sidebar (module list + headings TOC)
+│   │   ├── PdfExportButton.tsx         # PDF download button with loading state
+│   │   ├── CourseCard.tsx              # Course card for home grid
+│   │   ├── Tag.tsx                     # Badge/pill component
+│   │   ├── Block.tsx                   # Section title with divider
+│   │   ├── FCard.tsx                   # Exam format card (MC/FRQ)
+│   │   ├── DRow.tsx                    # Detail row (label + value)
+│   │   ├── Calendar.tsx                # Interactive exam calendar
+│   │   ├── StudyMaterials.tsx          # Study resource link cards
+│   │   └── RevisionPlan.tsx            # 4-week study plan tabs
+│   │
+│   ├── hooks/
+│   │   ├── useUnitIndex.ts             # Fetches index.json, sorts files numerically
+│   │   └── useMarkdownFile.ts          # Fetches .md file with in-memory cache
+│   │
+│   ├── lib/
+│   │   ├── colors.ts                   # Design tokens (C.forest, C.sage, etc.)
+│   │   ├── theme.ts                    # Theme alias
+│   │   ├── parseHeadings.ts            # Extracts H2/H3 from markdown for sidebar TOC
+│   │   └── pdfExport.ts               # html2canvas + jsPDF unit PDF generation
+│   │
+│   └── data/
+│       ├── categories.ts               # All 37 courses with slugs, exam dates, unit counts
+│       ├── courseContent.ts             # Unit names, overviews, study materials, revision plans
+│       ├── schedule.ts                 # Exam schedule data
+│       ├── scoring.ts                  # MC/FRQ score weights per course
+│       └── slugAliases.ts              # URL alias map (e.g. "apes" -> "AP-Environmental-Science")
+│
+├── package.json
+├── tsconfig.json
+├── vite.config.ts
+└── README.md
+```
 
 ## Attribution
 
 Exam dates and course info sourced from College Board. Not affiliated with or endorsed by College Board.
 
-© Musa Ali 2026
-
+Musa Ali 2026
