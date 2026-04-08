@@ -3,7 +3,9 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  server: {
-    // historyApiFallback is enabled by default in Vite dev server
+  preview: {
+    allowedHosts: ["musaserver.org", "www.musaserver.org"],
+    port: 4173, // Ensures it stays on the port NPM expects
+    host: true,  // Equivalent to --host
   },
 });
