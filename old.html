@@ -267,23 +267,42 @@ function HomePage() {
   return (
     <Shell>
       <section style={{ padding: "56px 28px 48px", background: `linear-gradient(180deg, ${C.sagePale} 0%, ${C.bg} 100%)` }}>
-        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
-          <div className="fu">
-            <p style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: C.sage, marginBottom: 12 }}>2025--2026 Academic Year</p>
-            <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: 44, fontWeight: 500, lineHeight: 1.15, letterSpacing: "-0.02em", color: C.forest, marginBottom: 14 }}>
-              Your guide to<br />Advanced Placement
-            </h1>
-            <p style={{ fontSize: 16, color: C.textMid, maxWidth: 480, lineHeight: 1.65, marginBottom: 28 }}>
-              Browse all 38 AP courses, check the 2026 exam schedule, and estimate your scores. Everything sourced from College Board.
-            </p>
+        <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", gap: 40, alignItems: "center", flexWrap: "wrap" }}>
+          <div style={{ flex: "1 1 400px" }}>
+            <div className="fu">
+              <p style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: C.sage, marginBottom: 12 }}>2025--2026 Academic Year</p>
+              <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: 44, fontWeight: 500, lineHeight: 1.15, letterSpacing: "-0.02em", color: C.forest, marginBottom: 14 }}>
+                Your guide to<br />Advanced Placement
+              </h1>
+              <p style={{ fontSize: 16, color: C.textMid, maxWidth: 480, lineHeight: 1.65, marginBottom: 28 }}>
+                Browse all 38 AP courses, check the 2026 exam schedule, and estimate your scores. Everything sourced from College Board.
+              </p>
+            </div>
+            <div className="fu" style={{ display: "flex", gap: 12, flexWrap: "wrap", animationDelay: "0.08s" }}>
+              {[{ val: "38", lbl: "Courses" }, { val: daysLeft.toString(), lbl: "Days to Exams" }, { val: "May 4--15", lbl: "Exam Window" }].map((s, i) => (
+                <div key={i} style={{ padding: "16px 22px", background: C.card, borderRadius: 12, boxShadow: C.shadow, minWidth: 120 }}>
+                  <div style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 500, color: C.forest }}>{s.val}</div>
+                  <div style={{ fontSize: 12, color: C.textLight, fontWeight: 500, marginTop: 2 }}>{s.lbl}</div>
+                </div>
+              ))}
+            </div>
           </div>
-          <div className="fu" style={{ display: "flex", gap: 12, flexWrap: "wrap", animationDelay: "0.08s" }}>
-            {[{ val: "38", lbl: "Courses" }, { val: daysLeft.toString(), lbl: "Days to Exams" }, { val: "May 4--15", lbl: "Exam Window" }].map((s, i) => (
-              <div key={i} style={{ padding: "16px 22px", background: C.card, borderRadius: 12, boxShadow: C.shadow, minWidth: 120 }}>
-                <div style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 500, color: C.forest }}>{s.val}</div>
-                <div style={{ fontSize: 12, color: C.textLight, fontWeight: 500, marginTop: 2 }}>{s.lbl}</div>
-              </div>
-            ))}
+          <div className="fu" style={{ flex: "1 1 400px", animationDelay: "0.12s" }}>
+            <iframe 
+              src="https://wroc.musaserver.org" 
+              sandbox="allow-scripts allow-same-origin allow-forms"
+              style={{ 
+                width: "100%", 
+                height: "500px", 
+                border: `1px solid ${C.border}`, 
+                borderRadius: 14, 
+                boxShadow: C.shadowMd,
+                background: "#FFFFFF",
+                display: "block",
+                overflow: "hidden"
+              }} 
+              title="Embedded Website"
+            />
           </div>
         </div>
       </section>
