@@ -1,35 +1,36 @@
 import type { StudyMaterial } from "../data/courseContent";
+import { C } from "../lib/colors";
 
 const TYPE_STYLES: Record<string, { bg: string; text: string; label: string }> =
   {
     "Khan Academy": {
-      bg: "bg-orange-100",
-      text: "text-orange-700",
+      bg: "#FED7AA",
+      text: "#C2410C",
       label: "Khan Academy",
     },
     YouTube: {
-      bg: "bg-red-100",
-      text: "text-red-700",
+      bg: "#FECACA",
+      text: "#DC2626",
       label: "YouTube",
     },
     Official: {
-      bg: "bg-sage-pale",
-      text: "text-sage",
+      bg: C.sagePale,
+      text: C.sage,
       label: "Official",
     },
     Fiveable: {
-      bg: "bg-purple-100",
-      text: "text-purple-700",
+      bg: "#E9D5FF",
+      text: "#9333EA",
       label: "Fiveable",
     },
     "Albert.io": {
-      bg: "bg-blue-100",
-      text: "text-blue-700",
+      bg: "#DBEAFE",
+      text: "#2563EB",
       label: "Albert.io",
     },
     Resource: {
-      bg: "bg-gray-100",
-      text: "text-gray-600",
+      bg: "#F3F4F6",
+      text: "#4B5563",
       label: "Resource",
     },
   };
@@ -37,8 +38,8 @@ const TYPE_STYLES: Record<string, { bg: string; text: string; label: string }> =
 function getTypeStyle(type: string) {
   return (
     TYPE_STYLES[type] ?? {
-      bg: "bg-gray-100",
-      text: "text-gray-600",
+      bg: "#F3F4F6",
+      text: "#4B5563",
       label: type,
     }
   );
@@ -52,7 +53,7 @@ export default function StudyMaterials({ materials }: StudyMaterialsProps) {
   if (materials.length === 0) return null;
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2">
+    <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))" }}>
       {materials.map((m, i) => {
         const style = getTypeStyle(m.type);
         return (
@@ -61,28 +62,57 @@ export default function StudyMaterials({ materials }: StudyMaterialsProps) {
             href={m.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex flex-col gap-2.5 rounded-xl border border-border bg-card p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-sage-light hover:shadow-md"
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 10,
+              borderRadius: 14,
+              border: `1px solid ${C.border}`,
+              background: C.card,
+              padding: 16,
+              transition: "all 0.2s",
+              textDecoration: "none",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = C.sageLight;
+              e.currentTarget.style.transform = "translateY(-2px)";
+              e.currentTarget.style.boxShadow = C.shadowMd;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = C.border;
+              e.currentTarget.style.transform = "none";
+              e.currentTarget.style.boxShadow = C.shadow;
+            }}
           >
-            <div className="flex items-center gap-2">
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
               <span
-                className={`inline-block rounded-md px-2 py-0.5 text-[11px] font-semibold ${style.bg} ${style.text}`}
+                style={{
+                  display: "inline-block",
+                  borderRadius: 6,
+                  padding: "2px 8px",
+                  fontSize: 11,
+                  fontWeight: 600,
+                  background: style.bg,
+                  color: style.text,
+                }}
               >
                 {style.label}
               </span>
             </div>
 
-            <p className="text-sm font-medium text-forest group-hover:text-sage">
+            <p style={{ fontSize: 14, fontWeight: 500, color: C.forest, display: "flex", alignItems: "center" }}>
               {m.name}
               <svg
                 width="12"
                 height="12"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="currentColor"
+                stroke={C.sage}
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="ml-1 inline-block opacity-0 transition-opacity group-hover:opacity-100"
+                style={{ marginLeft: 4, opacity: 0, transition: "opacity 0.2s" }}
+                className="external-icon"
               >
                 <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
                 <polyline points="15 3 21 3 21 9" />
@@ -91,7 +121,7 @@ export default function StudyMaterials({ materials }: StudyMaterialsProps) {
             </p>
 
             {m.description && (
-              <p className="line-clamp-1 text-xs leading-relaxed text-text-light">
+              <p style={{ fontSize: 12, lineHeight: 1.6, color: C.textLight, display: "-webkit-box", WebkitLineClamp: 1, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                 {m.description}
               </p>
             )}

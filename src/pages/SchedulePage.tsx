@@ -1,49 +1,55 @@
-import { motion } from "framer-motion";
 import Shell from "../components/Shell";
-import Calendar from "../components/Calendar";
 import { SCHEDULE } from "../data/schedule";
-
-const MAY_2026 = new Date(2026, 4, 1); // May 2026
-
-const fade = {
-  initial: { opacity: 0, y: 14 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.45, ease: "easeOut" as const },
-};
+import { C } from "../lib/colors";
 
 export default function SchedulePage() {
   return (
     <Shell>
-      <section className="mx-auto flex max-w-[1200px] flex-col items-center px-6 py-10 md:px-10">
-        <motion.div {...fade} className="flex flex-col items-center text-center">
-          <h2 className="mb-1 font-display text-[26px] font-medium text-forest">
+      <section style={{ padding: "40px 28px", maxWidth: 1200, margin: "0 auto" }}>
+        <div className="fu">
+          <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 26, fontWeight: 500, color: C.forest, marginBottom: 4 }}>
             2026 AP Exam Schedule
           </h2>
-          <p className="mb-7 text-sm text-text-light">
-            All exams administered May 4&ndash;15, 2026. Morning sessions at
-            8:00 AM, afternoon sessions at 12:00 PM local time.
+          <p style={{ fontSize: 14, color: C.textLight, marginBottom: 28 }}>
+            All exams administered May 4--15, 2026. Morning sessions at 8:00 AM, afternoon sessions at 12:00 PM local time.
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          {...fade}
-          transition={{ ...fade.transition, delay: 0.08 }}
-          className="w-full text-left overflow-x-auto rounded-[14px] border border-border-soft bg-card p-4 shadow-sm sm:p-6"
-        >
-          <div className="min-w-[640px]">
-            <Calendar schedule={SCHEDULE} month={MAY_2026} />
+        <div className="fu" style={{ animationDelay: "0.08s", background: C.card, border: `1px solid ${C.borderSoft}`, borderRadius: 14, overflow: "hidden", boxShadow: C.shadow }}>
+          <div style={{ display: "grid", gridTemplateColumns: "140px 1fr 1fr", background: C.sage, padding: "12px 22px", gap: 14 }}>
+            {["Date", "Morning (8 AM)", "Afternoon (12 PM)"].map((h) => (
+              <div key={h} style={{ fontSize: 12, fontWeight: 700, color: "#fff", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                {h}
+              </div>
+            ))}
           </div>
-        </motion.div>
+          {SCHEDULE.map((row, i) => (
+            <div key={i}>
+              {(i === 0 || i === 5) && (
+                <div style={{ padding: "8px 22px", background: C.sagePale, fontSize: 11, fontWeight: 700, color: C.sage, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                  {i === 0 ? "Week 1" : "Week 2"}
+                </div>
+              )}
+              <div className="fu" style={{ display: "grid", gridTemplateColumns: "140px 1fr 1fr", padding: "14px 22px", gap: 14, borderBottom: i < SCHEDULE.length - 1 ? `1px solid ${C.borderSoft}` : "none", animationDelay: `${i * 0.03}s` }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: C.forest }}>{row.day}</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                  {row.morning.map((e) => (
+                    <span key={e} style={{ fontSize: 13, color: C.textMid }}>{e}</span>
+                  ))}
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                  {row.afternoon.map((e) => (
+                    <span key={e} style={{ fontSize: 13, color: C.textMid }}>{e}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
 
-        <motion.div
-          {...fade}
-          transition={{ ...fade.transition, delay: 0.16 }}
-          className="w-full text-left mt-4 max-w-[640px] rounded-xl bg-sage-pale p-[18px] text-[13px] leading-relaxed text-text-mid"
-        >
-          <strong className="text-forest">Late Testing:</strong> Available May
-          18&ndash;22, 2026 for students with qualifying circumstances. Contact
-          your AP Coordinator. Source: College Board AP Central.
-        </motion.div>
+        <div className="fu" style={{ marginTop: 16, padding: 18, background: C.sagePale, borderRadius: 12, fontSize: 13, color: C.textMid, lineHeight: 1.6, animationDelay: "0.16s" }}>
+          <strong style={{ color: C.forest }}>Late Testing:</strong> Available May 18--22, 2026 for students with qualifying circumstances. Contact your AP Coordinator. Source: College Board AP Central.
+        </div>
       </section>
     </Shell>
   );

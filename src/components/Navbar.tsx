@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { motion } from "framer-motion";
+import { C } from "../lib/colors";
 
 const NAV_ITEMS = [
   { label: "Courses", to: "/" },
@@ -12,48 +12,29 @@ export default function Navbar() {
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const isHome = pathname === "/" || pathname === "";
+
   return (
-    <nav className="sticky top-0 z-50 border-b border-border bg-bg/[0.93] backdrop-blur-[12px]">
-      <div className="mx-auto flex h-[60px] w-full max-w-[1200px] items-center justify-between px-6 md:px-10">
-        <Link to="/" className="flex items-center gap-2.5">
-          <div className="flex h-[30px] w-[30px] items-center justify-center rounded-lg bg-sage">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="white"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-              <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+    <nav style={{ position: "sticky", top: 0, zIndex: 100, background: `${C.bg}EE`, backdropFilter: "blur(12px)", borderBottom: `1px solid ${C.border}` }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 60, padding: "0 28px" }}>
+        <Link to="/" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 30, height: 30, borderRadius: 8, background: C.sage, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
             </svg>
           </div>
-          <span className="font-display text-[17px] font-semibold text-forest">
-            AP Learning Center
-          </span>
+          <span style={{ fontFamily: "'Fraunces', serif", fontSize: 19, fontWeight: 500, color: C.forest, letterSpacing: "-0.01em" }}>AP Learning Center</span>
         </Link>
 
         {/* Desktop nav */}
-        <div className="hidden items-center gap-1 sm:flex">
-          {NAV_ITEMS.map(({ label, to }) => {
-            const active =
-              to === "/" ? pathname === "/" : pathname.startsWith(to);
+        <div style={{ display: "none", gap: 4 }} className="desktop-nav">
+          {NAV_ITEMS.map((item) => {
+            const active = (item.to === "/" && isHome) || (item.to !== "/" && pathname.startsWith(item.to));
             return (
-              <Link key={to} to={to}>
-                <motion.span
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.97 }}
-                  className={`inline-flex items-center rounded-lg px-3.5 py-1.5 text-[13.5px] transition-colors ${
-                    active
-                      ? "bg-sage-pale font-semibold text-forest"
-                      : "bg-transparent text-text-mid hover:bg-bg-warm"
-                  }`}
-                >
-                  {label}
-                </motion.span>
+              <Link key={item.to} to={item.to} style={{ textDecoration: "none" }}>
+                <button style={{ background: active ? C.sagePale : "transparent", border: "none", color: active ? C.forest : C.textMid, padding: "7px 16px", borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: active ? 600 : 400, fontFamily: "'Outfit', sans-serif", transition: "all 0.2s" }}>
+                  {item.label}
+                </button>
               </Link>
             );
           })}
@@ -62,7 +43,8 @@ export default function Navbar() {
         {/* Mobile hamburger */}
         <button
           onClick={() => setMenuOpen((o) => !o)}
-          className="flex h-9 w-9 items-center justify-center rounded-lg text-text-mid hover:bg-bg-warm sm:hidden"
+          style={{ display: "flex", alignItems: "center", justifyContent: "center", width: 36, height: 36, borderRadius: 8, background: "transparent", border: "none", cursor: "pointer", color: C.textMid }}
+          className="mobile-menu-btn"
           aria-label="Toggle menu"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
@@ -84,22 +66,17 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {menuOpen && (
-        <div className="border-t border-border-soft bg-bg px-6 py-3 sm:hidden">
-          {NAV_ITEMS.map(({ label, to }) => {
-            const active =
-              to === "/" ? pathname === "/" : pathname.startsWith(to);
+        <div style={{ borderTop: `1px solid ${C.borderSoft}`, background: C.bg, padding: "12px 28px" }} className="mobile-menu">
+          {NAV_ITEMS.map((item) => {
+            const active = (item.to === "/" && isHome) || (item.to !== "/" && pathname.startsWith(item.to));
             return (
               <Link
-                key={to}
-                to={to}
+                key={item.to}
+                to={item.to}
                 onClick={() => setMenuOpen(false)}
-                className={`block rounded-lg px-3 py-2.5 text-sm ${
-                  active
-                    ? "font-semibold text-forest"
-                    : "text-text-mid"
-                }`}
+                style={{ textDecoration: "none", display: "block", padding: "8px 12px", borderRadius: 8, fontSize: 14, color: active ? C.forest : C.textMid, fontWeight: active ? 600 : 400, marginBottom: 4 }}
               >
-                {label}
+                {item.label}
               </Link>
             );
           })}

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { C } from "../lib/colors";
 
 interface BlockProps {
   title: string;
@@ -7,8 +8,8 @@ interface BlockProps {
 
 export default function Block({ title, children }: BlockProps) {
   return (
-    <section>
-      <h2 className="mb-5 border-b border-border-soft pb-3 font-display text-[21px] font-medium text-forest">
+    <section style={{ marginBottom: 28 }}>
+      <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 21, fontWeight: 500, color: C.forest, marginBottom: 14, paddingBottom: 10, borderBottom: `1px solid ${C.border}` }}>
         {title}
       </h2>
       {children}

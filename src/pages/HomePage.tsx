@@ -1,14 +1,8 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import Shell from "../components/Shell";
 import CourseCard from "../components/CourseCard";
 import { CATEGORIES, ALL_COURSES } from "../data/categories";
-
-const fade = {
-  initial: { opacity: 0, y: 14 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.45, ease: "easeOut" as const },
-};
+import { C } from "../lib/colors";
 
 export default function HomePage() {
   const [search, setSearch] = useState("");
@@ -34,76 +28,46 @@ export default function HomePage() {
   return (
     <Shell>
       {/* Hero */}
-      <section
-        className="px-6 pb-14 pt-14 md:px-10 md:pb-16"
-        style={{
-          background:
-            "linear-gradient(180deg, var(--color-sage-pale) 0%, var(--color-bg) 100%)",
-        }}
-      >
-        <div className="mx-auto max-w-[1200px]">
-          <motion.div {...fade}>
-            <p className="mb-3 text-[13px] font-semibold uppercase tracking-[0.06em] text-sage">
-              2025&ndash;2026 Academic Year
+      <section style={{ padding: "56px 28px 48px", background: `linear-gradient(180deg, ${C.sagePale} 0%, ${C.bg} 100%)` }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <div className="fu">
+            <p style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: C.sage, marginBottom: 12 }}>
+              2025--2026 Academic Year
             </p>
-            <h1 className="mb-3.5 font-display text-3xl font-medium leading-[1.15] tracking-tight text-forest sm:text-[44px]">
-              Your guide to
-              <br />
-              Advanced Placement
+            <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: 44, fontWeight: 500, lineHeight: 1.15, letterSpacing: "-0.02em", color: C.forest, marginBottom: 14 }}>
+              Your guide to<br />Advanced Placement
             </h1>
-            <p className="mb-8 max-w-[480px] text-base leading-[1.65] text-text-mid">
-              Browse all 38 AP courses, check the 2026 exam schedule, and
-              estimate your scores. Everything sourced from College Board.
+            <p style={{ fontSize: 16, color: C.textMid, maxWidth: 480, lineHeight: 1.65, marginBottom: 28 }}>
+              Browse all 38 AP courses, check the 2026 exam schedule, and estimate your scores. Everything sourced from College Board.
             </p>
-          </motion.div>
-
-          <motion.div
-            {...fade}
-            transition={{ ...fade.transition, delay: 0.08 }}
-            className="flex flex-wrap gap-3"
-          >
+          </div>
+          <div className="fu" style={{ display: "flex", gap: 12, flexWrap: "wrap", animationDelay: "0.08s" }}>
             {[
               { val: "38", lbl: "Courses" },
               { val: daysLeft.toString(), lbl: "Days to Exams" },
-              { val: "May 4\u201315", lbl: "Exam Window" },
+              { val: "May 4--15", lbl: "Exam Window" },
             ].map((s) => (
-              <div
-                key={s.lbl}
-                className="min-w-[120px] rounded-xl bg-card px-[22px] py-4 shadow-sm"
-              >
-                <div className="font-display text-2xl font-medium text-forest">
-                  {s.val}
-                </div>
-                <div className="mt-0.5 text-xs font-medium text-text-light">
-                  {s.lbl}
-                </div>
+              <div key={s.lbl} style={{ padding: "16px 22px", background: C.card, borderRadius: 12, boxShadow: C.shadow, minWidth: 120 }}>
+                <div style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 500, color: C.forest }}>{s.val}</div>
+                <div style={{ fontSize: 12, color: C.textLight, fontWeight: 500, marginTop: 2 }}>{s.lbl}</div>
               </div>
             ))}
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* Course listing */}
-      <section className="mx-auto max-w-[1200px] px-6 py-10 md:px-10">
-        <h2 className="mb-1 font-display text-[26px] font-medium text-forest">
+      <section style={{ padding: "40px 28px", maxWidth: 1200, margin: "0 auto" }}>
+        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 26, fontWeight: 500, color: C.forest, marginBottom: 4 }}>
           Browse Courses
         </h2>
-        <p className="mb-6 text-sm text-text-light">
+        <p style={{ fontSize: 14, color: C.textLight, marginBottom: 24 }}>
           Select a category or search to find your AP course.
         </p>
 
-        <div className="mb-3 w-full max-w-[420px]">
-          <div className="relative">
-            <svg
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light"
-              width="15"
-              height="15"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            >
+        <div style={{ display: "flex", gap: 12, marginBottom: 24, flexWrap: "wrap", alignItems: "center" }}>
+          <div style={{ position: "relative", flex: "1 1 260px", maxWidth: 320 }}>
+            <svg style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)" }} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={C.textLight} strokeWidth="2" strokeLinecap="round">
               <circle cx="11" cy="11" r="8" />
               <path d="m21 21-4.3-4.3" />
             </svg>
@@ -112,35 +76,53 @@ export default function HomePage() {
               placeholder="Search courses..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-[10px] border border-border bg-card py-2.5 pl-9 pr-3 text-sm text-text-main outline-none transition-colors focus:border-sage"
+              style={{
+                width: "100%",
+                padding: "9px 12px 9px 36px",
+                background: C.card,
+                border: `1px solid ${C.border}`,
+                borderRadius: 10,
+                color: C.text,
+                fontSize: 14,
+                fontFamily: "'Outfit', sans-serif",
+                outline: "none",
+              }}
+              onFocus={(e) => e.target.style.borderColor = C.sage}
+              onBlur={(e) => e.target.style.borderColor = C.border}
             />
+          </div>
+          <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+            {["All", ...CATEGORIES.map((c) => c.name)].map((c) => (
+              <button
+                key={c}
+                onClick={() => setCat(c)}
+                style={{
+                  padding: "7px 14px",
+                  borderRadius: 8,
+                  cursor: "pointer",
+                  fontSize: 13,
+                  fontWeight: 500,
+                  fontFamily: "'Outfit', sans-serif",
+                  background: cat === c ? C.sage : C.card,
+                  color: cat === c ? "#fff" : C.textMid,
+                  border: `1px solid ${cat === c ? C.sage : C.border}`,
+                  transition: "all 0.2s",
+                }}
+              >
+                {c}
+              </button>
+            ))}
           </div>
         </div>
 
-        <div className="mb-6 flex flex-wrap gap-1.5">
-          {["All", ...CATEGORIES.map((c) => c.name)].map((c) => (
-            <button
-              key={c}
-              onClick={() => setCat(c)}
-              className={`rounded-lg border px-3.5 py-1.5 text-[13px] font-medium transition-all ${
-                cat === c
-                  ? "border-sage bg-sage text-white"
-                  : "border-border bg-card text-text-mid hover:border-sage-light"
-              }`}
-            >
-              {c}
-            </button>
-          ))}
-        </div>
-
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 12 }}>
           {filtered.map((course, i) => (
             <CourseCard key={course.slug} course={course} index={i} />
           ))}
         </div>
 
         {filtered.length === 0 && (
-          <div className="py-12 text-sm text-text-light">
+          <div style={{ textAlign: "center", padding: "48px 20px", color: C.textLight, fontSize: 14 }}>
             No courses match your search.
           </div>
         )}

@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AP Learning Center</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23618B4A'/><text x='50%25' y='58%25' dominant-baseline='middle' text-anchor='middle' font-size='55' font-family='serif' fill='white'>AP</text></svg>">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
+
+/* ─────────────────────────────────────────────
+   AP LEARNING CENTER — Soft Sage Edition
+   ───────────────────────────────────────────── */
+
+const C = {
+  bg: "#F7F6F1",
+  bgWarm: "#F0EFE7",
+  card: "#FFFFFF",
+  cardHover: "#FCFCF9",
+  forest: "#40531B",
+  sage: "#618B4A",
+  sageSoft: "#8AAF76",
+  sageLight: "#D4E4CC",
+  sagePale: "#EBF2E6",
+  mint: "#A8E6B4",
+  mintSoft: "#C5F0CE",
+  text: "#2C3A1E",
+  textMid: "#5A6B4D",
+  textLight: "#8A9A7C",
+  border: "#DDE5D6",
+  borderSoft: "#E8EDE3",
+  shadow: "0 1px 3px rgba(44,58,30,0.06), 0 1px 2px rgba(44,58,30,0.04)",
+  shadowMd: "0 4px 12px rgba(44,58,30,0.08), 0 1px 3px rgba(44,58,30,0.06)",
+  shadowLg: "0 8px 24px rgba(44,58,30,0.10), 0 2px 6px rgba(44,58,30,0.06)",
+};
+
+// ── Per-subject scoring data (MC/FRQ weights + approximate cutoffs) ──
+// cutoffs = [min% for 5, min% for 4, min% for 3, min% for 2]
+// Based on College Board course descriptions & historical data from Albert.io, Test Ninjas, etc.
+const SCORING = {
+  "AP-Biology": { mcWeight: 50, frqWeight: 50, cutoffs: [74, 58, 42, 28] },
+  "AP-Chemistry": { mcWeight: 50, frqWeight: 50, cutoffs: [72, 56, 40, 26] },
+  "AP-Environmental-Science": { mcWeight: 50, frqWeight: 50, cutoffs: [68, 52, 38, 24] },
+  "AP-Physics-1": { mcWeight: 50, frqWeight: 50, cutoffs: [70, 55, 38, 25] },
+  "AP-Physics-2": { mcWeight: 50, frqWeight: 50, cutoffs: [70, 55, 38, 25] },
+  "AP-Physics-C-Mechanics": { mcWeight: 50, frqWeight: 50, cutoffs: [68, 52, 36, 22] },
+  "AP-Physics-C-EM": { mcWeight: 50, frqWeight: 50, cutoffs: [68, 52, 36, 22] },
+  "AP-Calculus-AB": { mcWeight: 50, frqWeight: 50, cutoffs: [70, 55, 38, 25] },
+  "AP-Calculus-BC": { mcWeight: 50, frqWeight: 50, cutoffs: [66, 52, 36, 22] },
+  "AP-Precalculus": { mcWeight: 63, frqWeight: 37, cutoffs: [72, 56, 40, 26] },
+  "AP-Statistics": { mcWeight: 50, frqWeight: 50, cutoffs: [72, 56, 40, 26] },
+  "AP-English-Language": { mcWeight: 45, frqWeight: 55, cutoffs: [72, 56, 42, 28] },
+  "AP-English-Literature": { mcWeight: 45, frqWeight: 55, cutoffs: [72, 56, 42, 28] },
+  "AP-US-History": { mcWeight: 40, frqWeight: 60, cutoffs: [74, 58, 42, 28] },
+  "AP-World-History": { mcWeight: 40, frqWeight: 60, cutoffs: [74, 58, 42, 28] },
+  "AP-European-History": { mcWeight: 40, frqWeight: 60, cutoffs: [74, 58, 42, 28] },
+  "AP-US-Government": { mcWeight: 50, frqWeight: 50, cutoffs: [72, 56, 40, 26] },
+  "AP-Comparative-Government": { mcWeight: 50, frqWeight: 50, cutoffs: [72, 56, 40, 26] },
+  "AP-Macroeconomics": { mcWeight: 67, frqWeight: 33, cutoffs: [72, 56, 42, 28] },
+  "AP-Microeconomics": { mcWeight: 67, frqWeight: 33, cutoffs: [72, 56, 42, 28] },
+  "AP-Human-Geography": { mcWeight: 50, frqWeight: 50, cutoffs: [72, 56, 40, 26] },
+  "AP-Psychology": { mcWeight: 67, frqWeight: 33, cutoffs: [72, 56, 42, 28] },
+  "AP-African-American-Studies": { mcWeight: 50, frqWeight: 50, cutoffs: [70, 54, 38, 24] },
+  "AP-Computer-Science-A": { mcWeight: 50, frqWeight: 50, cutoffs: [68, 52, 36, 22] },
+  "AP-Computer-Science-Principles": { mcWeight: 70, frqWeight: 30, cutoffs: [72, 56, 40, 26] },
+  "AP-Art-History": { mcWeight: 50, frqWeight: 50, cutoffs: [72, 56, 42, 28] },
+  "AP-Music-Theory": { mcWeight: 45, frqWeight: 55, cutoffs: [72, 56, 42, 28] },
+  "AP-Spanish-Language": { mcWeight: 50, frqWeight: 50, cutoffs: [74, 58, 42, 28] },
+  "AP-French-Language": { mcWeight: 50, frqWeight: 50, cutoffs: [74, 58, 42, 28] },
+  "AP-German-Language": { mcWeight: 50, frqWeight: 50, cutoffs: [74, 58, 42, 28] },
+  "AP-Chinese-Language": { mcWeight: 50, frqWeight: 50, cutoffs: [74, 58, 42, 28] },
+  "AP-Japanese-Language": { mcWeight: 50, frqWeight: 50, cutoffs: [74, 58, 42, 28] },
+  "AP-Italian-Language": { mcWeight: 50, frqWeight: 50, cutoffs: [74, 58, 42, 28] },
+  "AP-Spanish-Literature": { mcWeight: 50, frqWeight: 50, cutoffs: [74, 58, 42, 28] },
+  "AP-Latin": { mcWeight: 50, frqWeight: 50, cutoffs: [74, 58, 42, 28] },
+  "AP-Seminar": { mcWeight: 0, frqWeight: 100, cutoffs: [80, 65, 50, 35] },
+  "AP-Research": { mcWeight: 0, frqWeight: 100, cutoffs: [80, 65, 50, 35] },
+};
+
+const CATEGORIES = [
+  {
+    name: "Sciences",
+    courses: [
+      { slug: "AP-Biology", title: "AP Biology", examDate: "May 4, 2026", examTime: "Morning", units: 8, desc: "Explore the core scientific principles, theories, and processes that govern living organisms and biological systems." },
+      { slug: "AP-Chemistry", title: "AP Chemistry", examDate: "May 5, 2026", examTime: "Morning", units: 9, desc: "Study the fundamental concepts of chemistry including structure, states of matter, intermolecular forces, and reactions." },
+      { slug: "AP-Environmental-Science", title: "AP Environmental Science", examDate: "May 15, 2026", examTime: "Morning", units: 9, desc: "Examine the interrelationships of the natural world and analyze environmental problems, both natural and human-made." },
+      { slug: "AP-Physics-1", title: "AP Physics 1: Algebra-Based", examDate: "May 6, 2026", examTime: "Afternoon", units: 7, desc: "Explore foundational physics concepts including Newtonian mechanics, work, energy, and mechanical waves." },
+      { slug: "AP-Physics-2", title: "AP Physics 2: Algebra-Based", examDate: "May 7, 2026", examTime: "Morning", units: 7, desc: "Study fluid mechanics, thermodynamics, electricity, magnetism, optics, and modern physics." },
+      { slug: "AP-Physics-C-Mechanics", title: "AP Physics C: Mechanics", examDate: "May 13, 2026", examTime: "Afternoon", units: 7, desc: "Calculus-based study of kinematics, Newton's laws, work and energy, systems of particles, and rotation." },
+      { slug: "AP-Physics-C-EM", title: "AP Physics C: E&M", examDate: "May 14, 2026", examTime: "Afternoon", units: 5, desc: "Calculus-based exploration of electrostatics, conductors, capacitors, dielectrics, electric circuits, and electromagnetism." },
+    ],
+  },
+  {
+    name: "Mathematics",
+    courses: [
+      { slug: "AP-Calculus-AB", title: "AP Calculus AB", examDate: "May 11, 2026", examTime: "Morning", units: 8, desc: "Master the concepts and applications of differential and integral calculus." },
+      { slug: "AP-Calculus-BC", title: "AP Calculus BC", examDate: "May 11, 2026", examTime: "Morning", units: 10, desc: "Extend your knowledge of calculus through parametric, polar, and vector functions, and series." },
+      { slug: "AP-Precalculus", title: "AP Precalculus", examDate: "May 12, 2026", examTime: "Morning", units: 4, desc: "Build a deep understanding of polynomial, rational, exponential, logarithmic, and trigonometric functions." },
+      { slug: "AP-Statistics", title: "AP Statistics", examDate: "May 7, 2026", examTime: "Afternoon", units: 9, desc: "Learn to collect, analyze, and draw conclusions from data using statistical methods." },
+    ],
+  },
+  {
+    name: "English",
+    courses: [
+      { slug: "AP-English-Language", title: "AP English Language and Composition", examDate: "May 13, 2026", examTime: "Morning", units: 9, desc: "Develop skills in rhetorical analysis, argumentation, and synthesis of information from multiple sources." },
+      { slug: "AP-English-Literature", title: "AP English Literature and Composition", examDate: "May 6, 2026", examTime: "Morning", units: 9, desc: "Engage with challenging literary texts and develop your skills in literary analysis and argumentative writing." },
+    ],
+  },
+  {
+    name: "History & Social Sciences",
+    courses: [
+      { slug: "AP-US-History", title: "AP United States History", examDate: "May 8, 2026", examTime: "Morning", units: 9, desc: "Study the cultural, economic, political, and social developments that shaped the United States." },
+      { slug: "AP-World-History", title: "AP World History: Modern", examDate: "May 7, 2026", examTime: "Morning", units: 9, desc: "Explore world history from c. 1200 to the present, analyzing patterns of continuity and change." },
+      { slug: "AP-European-History", title: "AP European History", examDate: "May 4, 2026", examTime: "Afternoon", units: 9, desc: "Study the major events, individuals, and developments in European history from 1450 to the present." },
+      { slug: "AP-US-Government", title: "AP US Government and Politics", examDate: "May 5, 2026", examTime: "Afternoon", units: 5, desc: "Study the principles, institutions, processes, and policies of the United States government." },
+      { slug: "AP-Comparative-Government", title: "AP Comparative Government and Politics", examDate: "May 6, 2026", examTime: "Afternoon", units: 5, desc: "Compare political systems, institutions, and processes across six countries." },
+      { slug: "AP-Human-Geography", title: "AP Human Geography", examDate: "May 5, 2026", examTime: "Morning", units: 7, desc: "Explore how humans have shaped the Earth's surface and developed patterns of spatial organization." },
+      { slug: "AP-Psychology", title: "AP Psychology", examDate: "May 12, 2026", examTime: "Afternoon", units: 9, desc: "Study the systematic and scientific study of human behavior and mental processes." },
+      { slug: "AP-Macroeconomics", title: "AP Macroeconomics", examDate: "May 8, 2026", examTime: "Afternoon", units: 6, desc: "Examine the principles of economics that apply to an economic system as a whole." },
+      { slug: "AP-Microeconomics", title: "AP Microeconomics", examDate: "May 4, 2026", examTime: "Afternoon", units: 6, desc: "Study the principles of economics that apply to individual decision-makers within an economic system." },
+      { slug: "AP-African-American-Studies", title: "AP African American Studies", examDate: "May 7, 2026", examTime: "Afternoon", units: 4, desc: "Explore the diversity of African American experiences through interdisciplinary study." },
+    ],
+  },
+  {
+    name: "Computer Science",
+    courses: [
+      { slug: "AP-Computer-Science-A", title: "AP Computer Science A", examDate: "May 15, 2026", examTime: "Afternoon", units: 10, desc: "Study object-oriented programming methodology with an emphasis on problem solving and algorithm development using Java." },
+      { slug: "AP-Computer-Science-Principles", title: "AP Computer Science Principles", examDate: "May 14, 2026", examTime: "Afternoon", units: 5, desc: "Explore the foundational concepts of computer science and understand how computing affects the world." },
+    ],
+  },
+  {
+    name: "Arts",
+    courses: [
+      { slug: "AP-Art-History", title: "AP Art History", examDate: "May 14, 2026", examTime: "Morning", units: 10, desc: "Examine major forms of artistic expression from the past and present across diverse cultures." },
+      { slug: "AP-Music-Theory", title: "AP Music Theory", examDate: "May 11, 2026", examTime: "Afternoon", units: 8, desc: "Develop understanding of musical structure, compositional techniques, and aural skills." },
+    ],
+  },
+  {
+    name: "World Languages",
+    courses: [
+      { slug: "AP-Spanish-Language", title: "AP Spanish Language and Culture", examDate: "May 14, 2026", examTime: "Morning", units: 6, desc: "Develop proficiency in interpersonal, interpretive, and presentational communication in Spanish." },
+      { slug: "AP-French-Language", title: "AP French Language and Culture", examDate: "May 12, 2026", examTime: "Morning", units: 6, desc: "Develop proficiency in interpersonal, interpretive, and presentational communication in French." },
+      { slug: "AP-German-Language", title: "AP German Language and Culture", examDate: "May 13, 2026", examTime: "Morning", units: 6, desc: "Develop proficiency in interpersonal, interpretive, and presentational communication in German." },
+      { slug: "AP-Chinese-Language", title: "AP Chinese Language and Culture", examDate: "May 8, 2026", examTime: "Afternoon", units: 6, desc: "Develop proficiency in interpersonal, interpretive, and presentational communication in Chinese." },
+      { slug: "AP-Japanese-Language", title: "AP Japanese Language and Culture", examDate: "May 12, 2026", examTime: "Afternoon", units: 6, desc: "Develop proficiency in interpersonal, interpretive, and presentational communication in Japanese." },
+      { slug: "AP-Italian-Language", title: "AP Italian Language and Culture", examDate: "May 8, 2026", examTime: "Morning", units: 6, desc: "Develop proficiency in interpersonal, interpretive, and presentational communication in Italian." },
+      { slug: "AP-Spanish-Literature", title: "AP Spanish Literature and Culture", examDate: "May 13, 2026", examTime: "Afternoon", units: 8, desc: "Explore themes in Spanish literature from medieval to contemporary periods across the Spanish-speaking world." },
+      { slug: "AP-Latin", title: "AP Latin", examDate: "May 4, 2026", examTime: "Morning", units: 5, desc: "Develop reading skills in Latin through study of Vergil's Aeneid and Caesar's Gallic War." },
+    ],
+  },
+  {
+    name: "Capstone",
+    courses: [
+      { slug: "AP-Seminar", title: "AP Seminar", examDate: "May 11, 2026", examTime: "Afternoon", units: 4, desc: "Develop analytical and inquiry skills through exploring real-world issues from multiple perspectives." },
+      { slug: "AP-Research", title: "AP Research", examDate: "N/A", examTime: "Portfolio", units: 0, desc: "Conduct an independent research project culminating in an academic paper and presentation." },
+    ],
+  },
+];
+
+const ALL_COURSES = CATEGORIES.flatMap((c) => c.courses);
+
+const SCHEDULE = [
+  { day: "Mon, May 4", morning: ["Biology", "Latin"], afternoon: ["European History", "Microeconomics"] },
+  { day: "Tue, May 5", morning: ["Chemistry", "Human Geography"], afternoon: ["US Government and Politics"] },
+  { day: "Wed, May 6", morning: ["English Literature"], afternoon: ["Comparative Government", "Physics 1"] },
+  { day: "Thu, May 7", morning: ["Physics 2", "World History: Modern"], afternoon: ["African American Studies", "Statistics"] },
+  { day: "Fri, May 8", morning: ["Italian Language", "US History"], afternoon: ["Chinese Language", "Macroeconomics"] },
+  { day: "Mon, May 11", morning: ["Calculus AB", "Calculus BC"], afternoon: ["Music Theory", "Seminar"] },
+  { day: "Tue, May 12", morning: ["French Language", "Precalculus"], afternoon: ["Japanese Language", "Psychology"] },
+  { day: "Wed, May 13", morning: ["English Language", "German Language"], afternoon: ["Physics C: Mechanics", "Spanish Literature"] },
+  { day: "Thu, May 14", morning: ["Art History", "Spanish Language"], afternoon: ["CS Principles", "Physics C: E&M"] },
+  { day: "Fri, May 15", morning: ["Environmental Science"], afternoon: ["Computer Science A"] },
+];
+
+function useHashRoute() {
+  const [route, setRoute] = useState(window.location.hash.slice(1) || "/");
+  useEffect(() => {
+    const fn = () => setRoute(window.location.hash.slice(1) || "/");
+    window.addEventListener("hashchange", fn);
+    return () => window.removeEventListener("hashchange", fn);
+  }, []);
+  return route;
+}
+function nav(p) { window.location.hash = p; window.scrollTo({ top: 0, behavior: "smooth" }); }
+
+const globalCSS = `
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { background: ${C.bg}; color: ${C.text}; font-family: 'Outfit', sans-serif; -webkit-font-smoothing: antialiased; line-height: 1.6; }
+  ::selection { background: ${C.sageLight}; color: ${C.forest}; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  .fu { animation: fadeUp 0.45s ease both; }
+  input[type="range"] { -webkit-appearance: none; appearance: none; height: 6px; border-radius: 3px; outline: none; cursor: pointer; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; border-radius: 50%; background: ${C.sage}; cursor: pointer; border: 3px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+  input[type="range"]::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: ${C.sage}; cursor: pointer; border: 3px solid white; box-shadow: 0 1px 4px rgba(0,0,0,0.15); }
+`;
+
+function Navbar() {
+  const route = useHashRoute();
+  const isHome = route === "/" || route === "";
+  return (
+    <nav style={{ position: "sticky", top: 0, zIndex: 100, background: `${C.bg}EE`, backdropFilter: "blur(12px)", borderBottom: `1px solid ${C.border}` }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "space-between", height: 60, padding: "0 28px" }}>
+        <div onClick={() => nav("/")} style={{ cursor: "pointer", display: "flex", alignItems: "center", gap: 10 }}>
+          <div style={{ width: 30, height: 30, borderRadius: 8, background: C.sage, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/>
+            </svg>
+          </div>
+          <span style={{ fontFamily: "'Fraunces', serif", fontSize: 19, fontWeight: 500, color: C.forest, letterSpacing: "-0.01em" }}>AP Learning Center</span>
+        </div>
+        <div style={{ display: "flex", gap: 4 }}>
+          {[{ label: "Courses", path: "/" }, { label: "Schedule", path: "/schedule" }, { label: "Score Predictor", path: "/predictor" }].map((item) => {
+            const active = (item.path === "/" && isHome) || (item.path !== "/" && route.startsWith(item.path));
+            return (<button key={item.path} onClick={() => nav(item.path)} style={{ background: active ? C.sagePale : "transparent", border: "none", color: active ? C.forest : C.textMid, padding: "7px 16px", borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: active ? 600 : 400, fontFamily: "'Outfit', sans-serif", transition: "all 0.2s" }}>{item.label}</button>);
+          })}
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+function Footer() {
+  return (
+    <footer style={{ borderTop: `1px solid ${C.border}`, padding: "32px 28px", marginTop: 64 }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12, alignItems: "center" }}>
+        <div>
+          <div style={{ fontFamily: "'Fraunces', serif", fontSize: 16, color: C.forest, marginBottom: 2 }}>AP Learning Center</div>
+          <div style={{ fontSize: 12, color: C.textLight }}>Exam dates and course info sourced from College Board. Not affiliated with or endorsed by College Board.</div>
+        </div>
+        <div style={{ textAlign: "right" }}>
+          <div style={{ fontSize: 12, color: C.textLight }}>2026 AP Exams: May 4--15</div>
+          <div style={{ fontSize: 11, color: C.textLight, marginTop: 4 }}>{"\u00A9"} Musa Ali 2026</div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function Shell({ children }) {
+  return (<div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}><Navbar /><main style={{ flex: 1 }}>{children}</main><Footer /></div>);
+}
+
+function Tag({ children, variant = "default" }) {
+  const s = { default: { background: C.sagePale, color: C.sage }, accent: { background: C.mintSoft, color: C.forest }, muted: { background: C.bgWarm, color: C.textMid } };
+  return (<span style={{ ...s[variant], padding: "4px 10px", borderRadius: 6, fontSize: 12, fontWeight: 600, letterSpacing: "0.01em", whiteSpace: "nowrap" }}>{children}</span>);
+}
+
+// ── Home ──
+function HomePage() {
+  const [search, setSearch] = useState("");
+  const [cat, setCat] = useState("All");
+  const filtered = ALL_COURSES.filter((c) => {
+    const ms = c.title.toLowerCase().includes(search.toLowerCase());
+    const mc = cat === "All" || CATEGORIES.find((ct) => ct.name === cat)?.courses.some((cc) => cc.slug === c.slug);
+    return ms && mc;
+  });
+  const daysLeft = Math.max(0, Math.ceil((new Date("2026-05-04") - new Date()) / 86400000));
+
+  return (
+    <Shell>
+      <section style={{ padding: "56px 28px 48px", background: `linear-gradient(180deg, ${C.sagePale} 0%, ${C.bg} 100%)` }}>
+        <div style={{ maxWidth: 1200, margin: "0 auto" }}>
+          <div className="fu">
+            <p style={{ fontSize: 13, fontWeight: 600, letterSpacing: "0.06em", textTransform: "uppercase", color: C.sage, marginBottom: 12 }}>2025--2026 Academic Year</p>
+            <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: 44, fontWeight: 500, lineHeight: 1.15, letterSpacing: "-0.02em", color: C.forest, marginBottom: 14 }}>
+              Your guide to<br />Advanced Placement
+            </h1>
+            <p style={{ fontSize: 16, color: C.textMid, maxWidth: 480, lineHeight: 1.65, marginBottom: 28 }}>
+              Browse all 38 AP courses, check the 2026 exam schedule, and estimate your scores. Everything sourced from College Board.
+            </p>
+          </div>
+          <div className="fu" style={{ display: "flex", gap: 12, flexWrap: "wrap", animationDelay: "0.08s" }}>
+            {[{ val: "38", lbl: "Courses" }, { val: daysLeft.toString(), lbl: "Days to Exams" }, { val: "May 4--15", lbl: "Exam Window" }].map((s, i) => (
+              <div key={i} style={{ padding: "16px 22px", background: C.card, borderRadius: 12, boxShadow: C.shadow, minWidth: 120 }}>
+                <div style={{ fontFamily: "'Fraunces', serif", fontSize: 24, fontWeight: 500, color: C.forest }}>{s.val}</div>
+                <div style={{ fontSize: 12, color: C.textLight, fontWeight: 500, marginTop: 2 }}>{s.lbl}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section style={{ padding: "40px 28px", maxWidth: 1200, margin: "0 auto" }}>
+        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 26, fontWeight: 500, color: C.forest, marginBottom: 4 }}>Browse Courses</h2>
+        <p style={{ fontSize: 14, color: C.textLight, marginBottom: 24 }}>Select a category or search to find your AP course.</p>
+        <div style={{ display: "flex", gap: 12, marginBottom: 24, flexWrap: "wrap", alignItems: "center" }}>
+          <div style={{ position: "relative", flex: "1 1 260px", maxWidth: 320 }}>
+            <svg style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)" }} width="15" height="15" viewBox="0 0 24 24" fill="none" stroke={C.textLight} strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <input type="text" placeholder="Search courses..." value={search} onChange={(e) => setSearch(e.target.value)}
+              style={{ width: "100%", padding: "9px 12px 9px 36px", background: C.card, border: `1px solid ${C.border}`, borderRadius: 10, color: C.text, fontSize: 14, fontFamily: "'Outfit', sans-serif", outline: "none" }}
+              onFocus={(e) => e.target.style.borderColor = C.sage} onBlur={(e) => e.target.style.borderColor = C.border} />
+          </div>
+          <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+            {["All", ...CATEGORIES.map((c) => c.name)].map((c) => (
+              <button key={c} onClick={() => setCat(c)} style={{ padding: "7px 14px", borderRadius: 8, cursor: "pointer", fontSize: 13, fontWeight: 500, fontFamily: "'Outfit', sans-serif", background: cat === c ? C.sage : C.card, color: cat === c ? "#fff" : C.textMid, border: `1px solid ${cat === c ? C.sage : C.border}`, transition: "all 0.2s" }}>{c}</button>
+            ))}
+          </div>
+        </div>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: 12 }}>
+          {filtered.map((course, i) => <CourseCard key={course.slug} course={course} i={i} />)}
+        </div>
+        {filtered.length === 0 && <div style={{ textAlign: "center", padding: "48px 20px", color: C.textLight, fontSize: 14 }}>No courses match your search.</div>}
+      </section>
+    </Shell>
+  );
+}
+
+function CourseCard({ course, i }) {
+  const [h, setH] = useState(false);
+  return (
+    <div onClick={() => nav(`/course/${course.slug}`)} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)} className="fu"
+      style={{ background: C.card, border: `1px solid ${h ? C.sageLight : C.borderSoft}`, borderRadius: 14, padding: 22, cursor: "pointer", boxShadow: h ? C.shadowMd : C.shadow, transition: "all 0.2s ease", animationDelay: `${Math.min(i * 0.025, 0.35)}s`, transform: h ? "translateY(-2px)" : "none" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
+        <h3 style={{ fontFamily: "'Fraunces', serif", fontSize: 17, fontWeight: 500, lineHeight: 1.3, color: C.forest, flex: 1, marginRight: 10 }}>{course.title}</h3>
+        <svg style={{ opacity: h ? 0.7 : 0.2, transition: "opacity 0.2s", flexShrink: 0, marginTop: 3 }} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={C.sage} strokeWidth="2.5" strokeLinecap="round"><path d="M7 17L17 7M17 7H7M17 7V17"/></svg>
+      </div>
+      <p style={{ fontSize: 13, color: C.textLight, lineHeight: 1.55, marginBottom: 14, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>{course.desc}</p>
+      <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+        <Tag variant="accent">{course.examDate}</Tag>
+        <Tag variant="muted">{course.examTime}</Tag>
+        {course.units > 0 && <Tag>{course.units} Units</Tag>}
+      </div>
+    </div>
+  );
+}
+
+// ── Course Page ──
+function CoursePage({ slug }) {
+  const course = ALL_COURSES.find((c) => c.slug === slug);
+  if (!course) return (<Shell><div style={{ padding: "100px 28px", textAlign: "center" }}><h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 28, color: C.forest }}>Course not found</h2><button onClick={() => nav("/")} style={{ marginTop: 16, padding: "9px 20px", background: C.sage, color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontFamily: "'Outfit', sans-serif", fontWeight: 500 }}>Back to Courses</button></div></Shell>);
+  const category = CATEGORIES.find((ct) => ct.courses.some((c) => c.slug === slug));
+  const scoring = SCORING[slug];
+
+  return (
+    <Shell>
+      <div style={{ padding: "14px 28px", maxWidth: 1200, margin: "0 auto", display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: C.textLight }}>
+        <span onClick={() => nav("/")} style={{ cursor: "pointer", color: C.sage, fontWeight: 500 }}>Courses</span>
+        <span style={{ opacity: 0.4 }}>/</span>
+        {category && <><span>{category.name}</span><span style={{ opacity: 0.4 }}>/</span></>}
+        <span style={{ color: C.text }}>{course.title}</span>
+      </div>
+      <section style={{ padding: "24px 28px 40px", maxWidth: 1200, margin: "0 auto" }}>
+        <div className="fu">
+          <div style={{ display: "flex", gap: 8, marginBottom: 14, flexWrap: "wrap" }}>
+            <Tag variant="accent">{course.examDate}</Tag>
+            <Tag variant="muted">{course.examTime} Session</Tag>
+            {course.units > 0 && <Tag>{course.units} Units</Tag>}
+            {scoring && scoring.mcWeight > 0 && <Tag>MC {scoring.mcWeight}% / FRQ {scoring.frqWeight}%</Tag>}
+          </div>
+          <h1 style={{ fontFamily: "'Fraunces', serif", fontSize: 36, fontWeight: 500, lineHeight: 1.15, letterSpacing: "-0.01em", color: C.forest, marginBottom: 12 }}>{course.title}</h1>
+          <p style={{ fontSize: 16, color: C.textMid, lineHeight: 1.65, maxWidth: 640 }}>{course.desc}</p>
+        </div>
+      </section>
+      <section style={{ padding: "0 28px 48px", maxWidth: 1200, margin: "0 auto" }}>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 320px", gap: 28, alignItems: "start" }}>
+          <div>
+            <Block title="Course Overview">
+              <Placeholder lines={5} />
+              <p style={{ marginTop: 14, fontSize: 13, color: C.textLight, fontStyle: "italic" }}>Detailed course description, prerequisites, and recommended preparation will be added here. Content verified against the official College Board course framework.</p>
+            </Block>
+            <Block title="Exam Format">
+              {scoring && scoring.mcWeight > 0 ? (
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+                  <FCard section="Multiple Choice" detail={`${scoring.mcWeight}% of composite score`} />
+                  <FCard section="Free Response" detail={`${scoring.frqWeight}% of composite score`} />
+                </div>
+              ) : <FCard section="Performance Tasks / Portfolio" detail="100% of composite score" />}
+            </Block>
+            <Block title="Units & Topics">
+              {course.units > 0 ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  {Array.from({ length: course.units }, (_, i) => (
+                    <div key={i} style={{ padding: "12px 16px", background: C.bgWarm, borderRadius: 10, display: "flex", alignItems: "center", gap: 12 }}>
+                      <div style={{ width: 26, height: 26, borderRadius: 7, background: C.sageLight, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: C.sage }}>{i + 1}</div>
+                      <div><div style={{ fontSize: 14, fontWeight: 500, color: C.text }}>Unit {i + 1}</div><div style={{ fontSize: 12, color: C.textLight }}>Topics coming soon</div></div>
+                    </div>
+                  ))}
+                </div>
+              ) : <p style={{ color: C.textLight, fontSize: 14 }}>This course uses a portfolio-based assessment.</p>}
+            </Block>
+            <Block title="Study Resources">
+              <Placeholder lines={3} />
+              <p style={{ marginTop: 12, fontSize: 13, color: C.textLight, fontStyle: "italic" }}>Curated study materials, practice questions, and recommended resources will appear here.</p>
+            </Block>
+          </div>
+          <div style={{ position: "sticky", top: 76, display: "flex", flexDirection: "column", gap: 14 }}>
+            <div style={{ background: C.card, border: `1px solid ${C.borderSoft}`, borderRadius: 14, padding: 22, boxShadow: C.shadow }}>
+              <h3 style={{ fontFamily: "'Fraunces', serif", fontSize: 17, fontWeight: 500, color: C.forest, marginBottom: 14 }}>Exam Details</h3>
+              <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                <DRow label="Date" value={course.examDate} />
+                <DRow label="Session" value={course.examTime} />
+                <DRow label="Units" value={course.units > 0 ? course.units : "Portfolio"} />
+                <DRow label="Duration" value="~3 hours" />
+                <DRow label="Score Range" value="1 -- 5" />
+                {scoring && scoring.mcWeight > 0 && <DRow label="MC / FRQ" value={`${scoring.mcWeight}% / ${scoring.frqWeight}%`} />}
+              </div>
+            </div>
+            <div style={{ background: C.sagePale, border: `1px solid ${C.sageLight}`, borderRadius: 14, padding: 22 }}>
+              <h3 style={{ fontFamily: "'Fraunces', serif", fontSize: 17, fontWeight: 500, color: C.forest, marginBottom: 6 }}>Score Predictor</h3>
+              <p style={{ fontSize: 13, color: C.textMid, marginBottom: 14 }}>Estimate your AP score based on practice performance.</p>
+              <button onClick={() => nav("/predictor")} style={{ width: "100%", padding: "9px 18px", background: C.sage, color: "#fff", border: "none", borderRadius: 8, cursor: "pointer", fontSize: 14, fontWeight: 600, fontFamily: "'Outfit', sans-serif" }}>Try Score Predictor</button>
+            </div>
+            <div style={{ background: C.card, border: `1px solid ${C.borderSoft}`, borderRadius: 14, padding: 22, boxShadow: C.shadow }}>
+              <h3 style={{ fontFamily: "'Fraunces', serif", fontSize: 17, fontWeight: 500, color: C.forest, marginBottom: 10 }}>Related Courses</h3>
+              {category?.courses.filter((c) => c.slug !== slug).slice(0, 4).map((c) => (
+                <div key={c.slug} onClick={() => nav(`/course/${c.slug}`)} style={{ padding: "8px 0", borderBottom: `1px solid ${C.borderSoft}`, cursor: "pointer", fontSize: 13, color: C.textMid, transition: "color 0.15s" }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = C.sage} onMouseLeave={(e) => e.currentTarget.style.color = C.textMid}>{c.title}</div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+    </Shell>
+  );
+}
+
+function Block({ title, children }) {
+  return (<div className="fu" style={{ marginBottom: 28 }}><h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 21, fontWeight: 500, color: C.forest, marginBottom: 14, paddingBottom: 10, borderBottom: `1px solid ${C.border}` }}>{title}</h2>{children}</div>);
+}
+function FCard({ section, detail }) {
+  return (<div style={{ padding: 16, background: C.bgWarm, borderRadius: 10 }}><div style={{ fontSize: 14, fontWeight: 600, color: C.text, marginBottom: 3 }}>{section}</div><div style={{ fontSize: 13, color: C.textLight }}>{detail}</div></div>);
+}
+function DRow({ label, value }) {
+  return (<div style={{ display: "flex", justifyContent: "space-between", paddingBottom: 8, borderBottom: `1px solid ${C.borderSoft}`, fontSize: 13 }}><span style={{ color: C.textLight }}>{label}</span><span style={{ fontWeight: 500, color: C.text }}>{value}</span></div>);
+}
+function Placeholder({ lines = 4 }) {
+  return (<div style={{ display: "flex", flexDirection: "column", gap: 7 }}>{Array.from({ length: lines }, (_, i) => (<div key={i} style={{ height: 10, borderRadius: 5, background: C.borderSoft, width: i === lines - 1 ? "55%" : `${82 + Math.random() * 18}%` }} />))}</div>);
+}
+
+// ── Schedule ──
+function SchedulePage() {
+  return (
+    <Shell>
+      <section style={{ padding: "40px 28px", maxWidth: 1200, margin: "0 auto" }}>
+        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 26, fontWeight: 500, color: C.forest, marginBottom: 4 }}>2026 AP Exam Schedule</h2>
+        <p style={{ fontSize: 14, color: C.textLight, marginBottom: 28 }}>All exams administered May 4--15, 2026. Morning sessions at 8:00 AM, afternoon sessions at 12:00 PM local time.</p>
+        <div style={{ background: C.card, border: `1px solid ${C.borderSoft}`, borderRadius: 14, overflow: "hidden", boxShadow: C.shadow }}>
+          <div style={{ display: "grid", gridTemplateColumns: "140px 1fr 1fr", background: C.sage, padding: "12px 22px", gap: 14 }}>
+            {["Date", "Morning (8 AM)", "Afternoon (12 PM)"].map((h) => (<div key={h} style={{ fontSize: 12, fontWeight: 700, color: "#fff", textTransform: "uppercase", letterSpacing: "0.05em" }}>{h}</div>))}
+          </div>
+          {SCHEDULE.map((row, i) => (
+            <div key={i}>
+              {(i === 0 || i === 5) && (<div style={{ padding: "8px 22px", background: C.sagePale, fontSize: 11, fontWeight: 700, color: C.sage, textTransform: "uppercase", letterSpacing: "0.06em" }}>{i === 0 ? "Week 1" : "Week 2"}</div>)}
+              <div className="fu" style={{ display: "grid", gridTemplateColumns: "140px 1fr 1fr", padding: "14px 22px", gap: 14, borderBottom: i < SCHEDULE.length - 1 ? `1px solid ${C.borderSoft}` : "none", animationDelay: `${i * 0.03}s` }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: C.forest }}>{row.day}</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>{row.morning.map((e) => <span key={e} style={{ fontSize: 13, color: C.textMid }}>{e}</span>)}</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>{row.afternoon.map((e) => <span key={e} style={{ fontSize: 13, color: C.textMid }}>{e}</span>)}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="fu" style={{ marginTop: 16, padding: 18, background: C.sagePale, borderRadius: 12, fontSize: 13, color: C.textMid, lineHeight: 1.6 }}>
+          <strong style={{ color: C.forest }}>Late Testing:</strong> Available May 18--22, 2026 for students with qualifying circumstances. Contact your AP Coordinator. Source: College Board AP Central.
+        </div>
+      </section>
+    </Shell>
+  );
+}
+
+// ── Score Predictor ──
+function PredictorPage() {
+  const [slug, setSlug] = useState("");
+  const [mcVal, setMcVal] = useState(50);
+  const [frqVal, setFrqVal] = useState(50);
+  const [result, setResult] = useState(null);
+  const scoring = SCORING[slug];
+
+  const predict = () => {
+    if (!scoring) return;
+    const mcPct = mcVal / 100;
+    const frqPct = frqVal / 100;
+    const composite = (mcPct * scoring.mcWeight + frqPct * scoring.frqWeight) / 100;
+    const compositePct = Math.round(composite * 100);
+    const [c5, c4, c3, c2] = scoring.cutoffs;
+    let score = compositePct >= c5 ? 5 : compositePct >= c4 ? 4 : compositePct >= c3 ? 3 : compositePct >= c2 ? 2 : 1;
+    setResult({ score, compositePct });
+  };
+
+  const sliderBg = (val) => `linear-gradient(90deg, ${C.sage} 0%, ${C.sage} ${val}%, ${C.borderSoft} ${val}%, ${C.borderSoft} 100%)`;
+  const scoreLabels = { 5: "Extremely well qualified", 4: "Well qualified", 3: "Qualified", 2: "Possibly qualified", 1: "No recommendation" };
+
+  return (
+    <Shell>
+      <section style={{ padding: "40px 28px", maxWidth: 680, margin: "0 auto" }}>
+        <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 26, fontWeight: 500, color: C.forest, marginBottom: 4 }}>AP Score Predictor</h2>
+        <p style={{ fontSize: 14, color: C.textLight, marginBottom: 28 }}>
+          Estimate your AP score using subject-specific MC/FRQ weightings from College Board course descriptions. Cutoffs are approximate and shift each year.
+        </p>
+        <div className="fu" style={{ background: C.card, border: `1px solid ${C.borderSoft}`, borderRadius: 14, padding: 28, boxShadow: C.shadow }}>
+          <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: C.textMid, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.04em" }}>Select Course</label>
+          <select value={slug} onChange={(e) => { setSlug(e.target.value); setResult(null); }} style={{ width: "100%", padding: "10px 12px", background: C.bgWarm, border: `1px solid ${C.border}`, borderRadius: 10, color: C.text, fontSize: 14, fontFamily: "'Outfit', sans-serif", outline: "none", marginBottom: 24, cursor: "pointer" }}>
+            <option value="">-- Select a course --</option>
+            {CATEGORIES.map((ct) => (
+              <optgroup key={ct.name} label={ct.name}>
+                {ct.courses.map((c) => <option key={c.slug} value={c.slug}>{c.title}</option>)}
+              </optgroup>
+            ))}
+          </select>
+
+          {scoring && (
+            <>
+              <div style={{ display: "flex", gap: 8, marginBottom: 24 }}>
+                {scoring.mcWeight > 0 && (
+                  <div style={{ flex: scoring.mcWeight, background: C.sagePale, borderRadius: 8, padding: "10px 14px", textAlign: "center" }}>
+                    <div style={{ fontSize: 20, fontWeight: 600, color: C.forest }}>{scoring.mcWeight}%</div>
+                    <div style={{ fontSize: 11, color: C.textLight, fontWeight: 500 }}>Multiple Choice</div>
+                  </div>
+                )}
+                <div style={{ flex: scoring.frqWeight, background: C.mintSoft, borderRadius: 8, padding: "10px 14px", textAlign: "center" }}>
+                  <div style={{ fontSize: 20, fontWeight: 600, color: C.forest }}>{scoring.frqWeight}%</div>
+                  <div style={{ fontSize: 11, color: C.textLight, fontWeight: 500 }}>Free Response</div>
+                </div>
+              </div>
+
+              {scoring.mcWeight > 0 && (
+                <div style={{ marginBottom: 22 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+                    <label style={{ fontSize: 13, fontWeight: 600, color: C.text }}>Multiple Choice Accuracy</label>
+                    <span style={{ fontSize: 14, fontWeight: 700, color: C.sage }}>{mcVal}%</span>
+                  </div>
+                  <input type="range" min="0" max="100" value={mcVal} onChange={(e) => setMcVal(+e.target.value)} style={{ width: "100%", background: sliderBg(mcVal) }} />
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: C.textLight, marginTop: 4 }}><span>0%</span><span>50%</span><span>100%</span></div>
+                </div>
+              )}
+
+              <div style={{ marginBottom: 28 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+                  <label style={{ fontSize: 13, fontWeight: 600, color: C.text }}>Free Response Score</label>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: C.sage }}>{frqVal}%</span>
+                </div>
+                <input type="range" min="0" max="100" value={frqVal} onChange={(e) => setFrqVal(+e.target.value)} style={{ width: "100%", background: sliderBg(frqVal) }} />
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: C.textLight, marginTop: 4 }}><span>0%</span><span>50%</span><span>100%</span></div>
+              </div>
+
+              <button onClick={predict} style={{ width: "100%", padding: "11px 22px", background: C.sage, color: "#fff", border: "none", borderRadius: 10, cursor: "pointer", fontSize: 15, fontWeight: 600, fontFamily: "'Outfit', sans-serif" }}>Predict My Score</button>
+
+              {result && (
+                <div className="fu" style={{ marginTop: 22, padding: 26, background: C.sagePale, borderRadius: 12, textAlign: "center" }}>
+                  <div style={{ fontSize: 12, color: C.textLight, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>Estimated Score</div>
+                  <div style={{ fontFamily: "'Fraunces', serif", fontSize: 64, fontWeight: 500, color: C.forest, lineHeight: 1 }}>{result.score}</div>
+                  <div style={{ fontSize: 14, color: C.sage, fontWeight: 600, marginTop: 6 }}>{scoreLabels[result.score]}</div>
+                  <div style={{ fontSize: 13, color: C.textMid, marginTop: 4 }}>Weighted Composite: {result.compositePct}%</div>
+                  <div style={{ display: "flex", gap: 4, marginTop: 16, justifyContent: "center" }}>
+                    {[1, 2, 3, 4, 5].map((s) => (<div key={s} style={{ width: 44, height: 6, borderRadius: 3, background: s <= result.score ? C.sage : C.borderSoft, transition: "background 0.3s" }} />))}
+                  </div>
+                  <div style={{ marginTop: 14, fontSize: 12, color: C.textLight, lineHeight: 1.5 }}>
+                    {result.score >= 3 ? "A score of 3+ is generally considered qualifying for college credit at many institutions." : "Keep studying! Focus on your weaker section to bring up your composite."}
+                  </div>
+                </div>
+              )}
+            </>
+          )}
+        </div>
+
+        <div className="fu" style={{ marginTop: 16, padding: 18, background: C.sagePale, borderRadius: 12, fontSize: 13, color: C.textMid, lineHeight: 1.65 }}>
+          <strong style={{ color: C.forest }}>How this works:</strong> Each AP exam weights MC and FRQ sections differently. For example, History exams weight FRQ at 60% while Economics exams weight MC at 67%. Your percentage scores are weighted accordingly to produce a composite, then compared against approximate cutoffs derived from historical exam data. The College Board does not publish exact cutoffs and they shift yearly, so treat this as a rough guide only.
+        </div>
+      </section>
+    </Shell>
+  );
+}
+
+// ── Router ──
+function App() {
+  const route = useHashRoute();
+  let page;
+  if (route.startsWith("/course/")) page = <CoursePage slug={route.replace("/course/", "")} />;
+  else if (route === "/schedule") page = <SchedulePage />;
+  else if (route === "/predictor") page = <PredictorPage />;
+  else page = <HomePage />;
+  return (<><style>{globalCSS}</style>{page}</>);
+}
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"ea28b12afae54ebf8c57d72c7c89276c","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,14 +1,8 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
 import Shell from "../components/Shell";
 import { CATEGORIES } from "../data/categories";
 import { SCORING } from "../data/scoring";
-
-const fade = {
-  initial: { opacity: 0, y: 14 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.45, ease: "easeOut" as const },
-};
+import { C } from "../lib/colors";
 
 const scoreLabels: Record<number, string> = {
   5: "Extremely well qualified",
@@ -19,7 +13,7 @@ const scoreLabels: Record<number, string> = {
 };
 
 function sliderBg(val: number) {
-  return `linear-gradient(90deg, var(--color-sage) 0%, var(--color-sage) ${val}%, var(--color-border-soft) ${val}%, var(--color-border-soft) 100%)`;
+  return `linear-gradient(90deg, ${C.sage} 0%, ${C.sage} ${val}%, ${C.borderSoft} ${val}%, ${C.borderSoft} 100%)`;
 }
 
 export default function PredictorPage() {
@@ -56,24 +50,18 @@ export default function PredictorPage() {
 
   return (
     <Shell>
-      <section className="mx-auto flex max-w-[680px] flex-col items-center px-6 py-10 md:px-10">
-        <motion.div {...fade} className="flex flex-col items-center text-center">
-          <h2 className="mb-1 font-display text-[26px] font-medium text-forest">
+      <section style={{ padding: "40px 28px", maxWidth: 680, margin: "0 auto" }}>
+        <div className="fu">
+          <h2 style={{ fontFamily: "'Fraunces', serif", fontSize: 26, fontWeight: 500, color: C.forest, marginBottom: 4 }}>
             AP Score Predictor
           </h2>
-          <p className="mb-7 text-sm text-text-light">
-            Estimate your AP score using subject-specific MC/FRQ weightings from
-            College Board course descriptions. Cutoffs are approximate and shift
-            each year.
+          <p style={{ fontSize: 14, color: C.textLight, marginBottom: 28 }}>
+            Estimate your AP score using subject-specific MC/FRQ weightings from College Board course descriptions. Cutoffs are approximate and shift each year.
           </p>
-        </motion.div>
+        </div>
 
-        <motion.div
-          {...fade}
-          transition={{ ...fade.transition, delay: 0.06 }}
-          className="w-full text-left rounded-[14px] border border-border-soft bg-card p-7 shadow-sm"
-        >
-          <label className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.04em] text-text-mid">
+        <div className="fu" style={{ animationDelay: "0.06s", background: C.card, border: `1px solid ${C.borderSoft}`, borderRadius: 14, padding: 28, boxShadow: C.shadow }}>
+          <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: C.textMid, marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.04em" }}>
             Select Course
           </label>
           <select
@@ -82,7 +70,7 @@ export default function PredictorPage() {
               setSlug(e.target.value);
               setResult(null);
             }}
-            className="mb-6 w-full cursor-pointer rounded-[10px] border border-border bg-bg-warm px-3 py-2.5 text-sm text-text-main outline-none"
+            style={{ width: "100%", padding: "10px 12px", background: C.bgWarm, border: `1px solid ${C.border}`, borderRadius: 10, color: C.text, fontSize: 14, fontFamily: "'Outfit', sans-serif", outline: "none", marginBottom: 24, cursor: "pointer" }}
           >
             <option value="">-- Select a course --</option>
             {CATEGORIES.map((ct) => (
@@ -99,43 +87,25 @@ export default function PredictorPage() {
           {scoring && (
             <>
               {/* Weight bars */}
-              <div className="mb-6 flex gap-2">
+              <div style={{ display: "flex", gap: 8, marginBottom: 24 }}>
                 {scoring.mcWeight > 0 && (
-                  <div
-                    className="rounded-lg bg-sage-pale p-2.5 text-center"
-                    style={{ flex: scoring.mcWeight }}
-                  >
-                    <div className="text-xl font-semibold text-forest">
-                      {scoring.mcWeight}%
-                    </div>
-                    <div className="text-[11px] font-medium text-text-light">
-                      Multiple Choice
-                    </div>
+                  <div style={{ flex: scoring.mcWeight, background: C.sagePale, borderRadius: 8, padding: "10px 14px", textAlign: "center" }}>
+                    <div style={{ fontSize: 20, fontWeight: 600, color: C.forest }}>{scoring.mcWeight}%</div>
+                    <div style={{ fontSize: 11, color: C.textLight, fontWeight: 500 }}>Multiple Choice</div>
                   </div>
                 )}
-                <div
-                  className="rounded-lg bg-mint-soft p-2.5 text-center"
-                  style={{ flex: scoring.frqWeight }}
-                >
-                  <div className="text-xl font-semibold text-forest">
-                    {scoring.frqWeight}%
-                  </div>
-                  <div className="text-[11px] font-medium text-text-light">
-                    Free Response
-                  </div>
+                <div style={{ flex: scoring.frqWeight, background: C.mintSoft, borderRadius: 8, padding: "10px 14px", textAlign: "center" }}>
+                  <div style={{ fontSize: 20, fontWeight: 600, color: C.forest }}>{scoring.frqWeight}%</div>
+                  <div style={{ fontSize: 11, color: C.textLight, fontWeight: 500 }}>Free Response</div>
                 </div>
               </div>
 
               {/* MC Slider */}
               {scoring.mcWeight > 0 && (
-                <div className="mb-5">
-                  <div className="mb-2 flex items-center justify-between">
-                    <label className="text-[13px] font-semibold text-text-main">
-                      Multiple Choice Accuracy
-                    </label>
-                    <span className="text-sm font-bold text-sage">
-                      {mcVal}%
-                    </span>
+                <div style={{ marginBottom: 22 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+                    <label style={{ fontSize: 13, fontWeight: 600, color: C.text }}>Multiple Choice Accuracy</label>
+                    <span style={{ fontSize: 14, fontWeight: 700, color: C.sage }}>{mcVal}%</span>
                   </div>
                   <input
                     type="range"
@@ -143,26 +113,19 @@ export default function PredictorPage() {
                     max="100"
                     value={mcVal}
                     onChange={(e) => setMcVal(+e.target.value)}
-                    className="w-full"
-                    style={{ background: sliderBg(mcVal) }}
+                    style={{ width: "100%", background: sliderBg(mcVal) }}
                   />
-                  <div className="mt-1 flex justify-between text-[11px] text-text-light">
-                    <span>0%</span>
-                    <span>50%</span>
-                    <span>100%</span>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: C.textLight, marginTop: 4 }}>
+                    <span>0%</span><span>50%</span><span>100%</span>
                   </div>
                 </div>
               )}
 
               {/* FRQ Slider */}
-              <div className="mb-7">
-                <div className="mb-2 flex items-center justify-between">
-                  <label className="text-[13px] font-semibold text-text-main">
-                    Free Response Score
-                  </label>
-                  <span className="text-sm font-bold text-sage">
-                    {frqVal}%
-                  </span>
+              <div style={{ marginBottom: 28 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 8 }}>
+                  <label style={{ fontSize: 13, fontWeight: 600, color: C.text }}>Free Response Score</label>
+                  <span style={{ fontSize: 14, fontWeight: 700, color: C.sage }}>{frqVal}%</span>
                 </div>
                 <input
                   type="range"
@@ -170,75 +133,54 @@ export default function PredictorPage() {
                   max="100"
                   value={frqVal}
                   onChange={(e) => setFrqVal(+e.target.value)}
-                  className="w-full"
-                  style={{ background: sliderBg(frqVal) }}
+                  style={{ width: "100%", background: sliderBg(frqVal) }}
                 />
-                <div className="mt-1 flex justify-between text-[11px] text-text-light">
-                  <span>0%</span>
-                  <span>50%</span>
-                  <span>100%</span>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: C.textLight, marginTop: 4 }}>
+                  <span>0%</span><span>50%</span><span>100%</span>
                 </div>
               </div>
 
               <button
                 onClick={predict}
-                className="w-full rounded-[10px] bg-sage py-3 text-[15px] font-semibold text-white transition-colors hover:bg-forest"
+                style={{ width: "100%", padding: "11px 22px", background: C.sage, color: "#fff", border: "none", borderRadius: 10, cursor: "pointer", fontSize: 15, fontWeight: 600, fontFamily: "'Outfit', sans-serif" }}
               >
                 Predict My Score
               </button>
 
               {/* Result */}
               {result && (
-                <motion.div
-                  {...fade}
-                  className="mt-6 rounded-xl bg-sage-pale p-6 text-center"
-                >
-                  <div className="text-xs font-semibold uppercase tracking-[0.05em] text-text-light">
+                <div className="fu" style={{ marginTop: 22, padding: 26, background: C.sagePale, borderRadius: 12, textAlign: "center" }}>
+                  <div style={{ fontSize: 12, color: C.textLight, fontWeight: 600, textTransform: "uppercase", letterSpacing: "0.05em", marginBottom: 6 }}>
                     Estimated Score
                   </div>
-                  <div className="font-display text-[64px] font-medium leading-none text-forest">
+                  <div style={{ fontFamily: "'Fraunces', serif", fontSize: 64, fontWeight: 500, color: C.forest, lineHeight: 1 }}>
                     {result.score}
                   </div>
-                  <div className="mt-1.5 text-sm font-semibold text-sage">
+                  <div style={{ fontSize: 14, color: C.sage, fontWeight: 600, marginTop: 6 }}>
                     {scoreLabels[result.score]}
                   </div>
-                  <div className="mt-1 text-[13px] text-text-mid">
+                  <div style={{ fontSize: 13, color: C.textMid, marginTop: 4 }}>
                     Weighted Composite: {result.compositePct}%
                   </div>
-                  <div className="mt-4 flex justify-center gap-1">
+                  <div style={{ display: "flex", gap: 4, marginTop: 16, justifyContent: "center" }}>
                     {[1, 2, 3, 4, 5].map((s) => (
-                      <div
-                        key={s}
-                        className={`h-1.5 w-11 rounded-full transition-colors ${
-                          s <= result.score ? "bg-sage" : "bg-border-soft"
-                        }`}
-                      />
+                      <div key={s} style={{ width: 44, height: 6, borderRadius: 3, background: s <= result.score ? C.sage : C.borderSoft, transition: "background 0.3s" }} />
                     ))}
                   </div>
-                  <div className="mt-3.5 text-xs leading-relaxed text-text-light">
+                  <div style={{ marginTop: 14, fontSize: 12, color: C.textLight, lineHeight: 1.5 }}>
                     {result.score >= 3
                       ? "A score of 3+ is generally considered qualifying for college credit at many institutions."
                       : "Keep studying! Focus on your weaker section to bring up your composite."}
                   </div>
-                </motion.div>
+                </div>
               )}
             </>
           )}
-        </motion.div>
+        </div>
 
-        <motion.div
-          {...fade}
-          transition={{ ...fade.transition, delay: 0.12 }}
-          className="w-full text-left mt-4 rounded-xl bg-sage-pale p-[18px] text-[13px] leading-[1.65] text-text-mid"
-        >
-          <strong className="text-forest">How this works:</strong> Each AP exam
-          weights MC and FRQ sections differently. For example, History exams
-          weight FRQ at 60% while Economics exams weight MC at 67%. Your
-          percentage scores are weighted accordingly to produce a composite, then
-          compared against approximate cutoffs derived from historical exam data.
-          The College Board does not publish exact cutoffs and they shift yearly,
-          so treat this as a rough guide only.
-        </motion.div>
+        <div className="fu" style={{ marginTop: 16, padding: 18, background: C.sagePale, borderRadius: 12, fontSize: 13, color: C.textMid, lineHeight: 1.65, animationDelay: "0.12s" }}>
+          <strong style={{ color: C.forest }}>How this works:</strong> Each AP exam weights MC and FRQ sections differently. For example, History exams weight FRQ at 60% while Economics exams weight MC at 67%. Your percentage scores are weighted accordingly to produce a composite, then compared against approximate cutoffs derived from historical exam data. The College Board does not publish exact cutoffs and they shift yearly, so treat this as a rough guide only.
+        </div>
       </section>
     </Shell>
   );

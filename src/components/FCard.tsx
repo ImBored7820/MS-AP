@@ -1,3 +1,5 @@
+import { C } from "../lib/colors";
+
 interface FCardProps {
   section: string;
   detail: string;
@@ -5,11 +7,9 @@ interface FCardProps {
 
 export default function FCard({ section, detail }: FCardProps) {
   return (
-    <div className="rounded-[10px] bg-bg-warm p-4">
-      <p className="text-sm font-bold text-text-main">{section}</p>
-      <p className="mt-1 text-[13px] leading-relaxed text-text-light">
-        {detail}
-      </p>
+    <div style={{ padding: 16, background: C.bgWarm, borderRadius: 10 }}>
+      <div style={{ fontSize: 14, fontWeight: 600, color: C.text, marginBottom: 3 }}>{section}</div>
+      <div style={{ fontSize: 13, color: C.textLight }}>{detail}</div>
     </div>
   );
 }

@@ -8,8 +8,8 @@ const PredictorPage = lazy(() => import("./pages/PredictorPage"));
 
 function Loading() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-bg">
-      <div className="h-6 w-6 animate-spin rounded-full border-2 border-sage border-t-transparent" />
+    <div className="app-loading">
+      <div className="app-loading-spinner" />
     </div>
   );
 }

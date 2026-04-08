@@ -8,9 +8,9 @@ interface ShellProps {
 
 export default function Shell({ children }: ShellProps) {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
       <Navbar />
-      <main className="flex-1 min-w-0">{children}</main>
+      <main style={{ flex: 1 }}>{children}</main>
       <Footer />
     </div>
   );

@@ -1,22 +1,16 @@
+import { C } from "../lib/colors";
+
 export default function Footer() {
   return (
-    <footer className="mt-16 border-t border-border px-6 py-8 md:px-10">
-      <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-4">
+    <footer style={{ borderTop: `1px solid ${C.border}`, padding: "32px 28px", marginTop: 64 }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 12, alignItems: "center" }}>
         <div>
-          <p className="font-display text-[15px] font-semibold text-forest">
-            AP Learning Center
-          </p>
-          <p className="mt-1 text-xs leading-relaxed text-text-light">
-            Exam dates and course info sourced from College Board. Not
-            affiliated with or endorsed by College Board.
-          </p>
+          <div style={{ fontFamily: "'Fraunces', serif", fontSize: 16, color: C.forest, marginBottom: 2 }}>AP Learning Center</div>
+          <div style={{ fontSize: 12, color: C.textLight }}>Exam dates and course info sourced from College Board. Not affiliated with or endorsed by College Board.</div>
         </div>
-
-        <div className="text-left sm:text-right text-xs text-text-light">
-          <p className="font-medium text-text-mid">
-            2026 AP Exams: May 4&ndash;15
-          </p>
-          <p className="mt-1">&copy; Musa Ali 2026</p>
+        <div style={{ textAlign: "right" }}>
+          <div style={{ fontSize: 12, color: C.textLight }}>2026 AP Exams: May 4--15</div>
+          <div style={{ fontSize: 11, color: C.textLight, marginTop: 4 }}>{"\u00A9"} Musa Ali 2026</div>
         </div>
       </div>
     </footer>

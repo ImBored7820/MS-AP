@@ -1,3 +1,5 @@
+import { C } from "../lib/colors";
+
 interface DRowProps {
   label: string;
   value: string | number;
@@ -5,9 +7,9 @@ interface DRowProps {
 
 export default function DRow({ label, value }: DRowProps) {
   return (
-    <div className="flex items-center justify-between border-b border-border-soft py-2.5 text-sm">
-      <span className="text-text-light">{label}</span>
-      <span className="font-medium text-text-main">{value}</span>
+    <div style={{ display: "flex", justifyContent: "space-between", paddingBottom: 8, borderBottom: `1px solid ${C.borderSoft}`, fontSize: 13 }}>
+      <span style={{ color: C.textLight }}>{label}</span>
+      <span style={{ fontWeight: 500, color: C.text }}>{value}</span>
     </div>
   );
 }
