@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import { C } from "../lib/colors";
 
 function slugify(text: string): string {
@@ -14,8 +14,8 @@ interface MarkdownRendererProps {
 }
 
 // Inline markup: bold, italic, code, links, images
-function renderInline(text: string): (string | JSX.Element)[] {
-  const parts: (string | JSX.Element)[] = [];
+function renderInline(text: string): (string | React.ReactNode)[] {
+  const parts: (string | React.ReactNode)[] = [];
   let remaining = text;
   let key = 0;
 
