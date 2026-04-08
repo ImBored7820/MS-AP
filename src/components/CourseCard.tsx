@@ -19,7 +19,7 @@ const CourseCard = memo(function CourseCard({ course, index }: CourseCardProps) 
       transition={{ duration: 0.45, ease: "easeOut", delay }}
     >
       <Link
-        to={`/courses/${course.slug}`}
+        to={`/${course.slug}`}
         className="group block rounded-[14px] border border-border bg-card p-[22px] transition-all duration-200 hover:-translate-y-0.5 hover:border-sage-light hover:shadow-md"
       >
         <div className="flex items-start justify-between gap-3">

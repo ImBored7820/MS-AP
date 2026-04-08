@@ -1,4 +1,4 @@
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import Shell from "../components/Shell";
 import Tag from "../components/Tag";
@@ -24,22 +24,21 @@ const fade = {
 
 export default function CoursePage() {
   const { slug } = useParams<{ slug: string }>();
-  const navigate = useNavigate();
   const course = ALL_COURSES.find((c) => c.slug === slug);
 
   if (!course) {
     return (
       <Shell>
-        <div className="px-7 py-24 text-center">
+        <div className="mx-auto max-w-[1200px] px-6 py-24 text-center md:px-10">
           <h2 className="font-display text-[28px] text-forest">
             Course not found
           </h2>
-          <button
-            onClick={() => navigate("/")}
-            className="mt-4 rounded-lg bg-sage px-5 py-2.5 font-medium text-white"
+          <Link
+            to="/"
+            className="mt-4 inline-block rounded-lg bg-sage px-5 py-2.5 font-medium text-white"
           >
             Back to Courses
-          </button>
+          </Link>
         </div>
       </Shell>
     );
@@ -57,7 +56,7 @@ export default function CoursePage() {
   return (
     <Shell>
       {/* Breadcrumb */}
-      <div className="mx-auto flex max-w-[1200px] items-center gap-2 px-7 pt-3.5 text-[13px] text-text-light">
+      <div className="mx-auto flex max-w-[1200px] justify-center items-center gap-2 px-6 pt-3.5 text-[13px] text-text-light md:px-10">
         <Link to="/" className="font-medium text-sage hover:text-forest">
           Courses
         </Link>
@@ -72,9 +71,9 @@ export default function CoursePage() {
       </div>
 
       {/* Header */}
-      <section className="mx-auto max-w-[1200px] px-7 pb-10 pt-6">
-        <motion.div {...fade}>
-          <div className="mb-3.5 flex flex-wrap gap-2">
+      <section className="mx-auto flex max-w-[1200px] flex-col items-center px-6 pb-10 pt-6 text-center md:px-10">
+        <motion.div {...fade} className="flex flex-col items-center">
+          <div className="mb-3.5 flex flex-wrap justify-center gap-2">
             <Tag variant="accent">{course.examDate}</Tag>
             <Tag variant="muted">{course.examTime} Session</Tag>
             {course.units > 0 && <Tag>{course.units} Units</Tag>}
@@ -84,18 +83,18 @@ export default function CoursePage() {
               </Tag>
             )}
           </div>
-          <h1 className="mb-3 font-display text-[36px] font-medium leading-[1.15] tracking-tight text-forest">
+          <h1 className="mb-3 font-display text-[28px] font-medium leading-[1.15] tracking-tight text-forest sm:text-[36px]">
             {course.title}
           </h1>
-          <p className="max-w-[640px] text-base leading-[1.65] text-text-mid">
+          <p className="mx-auto max-w-[640px] text-base leading-[1.65] text-text-mid">
             {course.desc}
           </p>
         </motion.div>
       </section>
 
       {/* Content grid */}
-      <section className="mx-auto max-w-[1200px] px-7 pb-12">
-        <div className="grid items-start gap-7" style={{ gridTemplateColumns: "1fr 320px" }}>
+      <section className="mx-auto max-w-[1200px] px-6 pb-12 md:px-10">
+        <div className="grid grid-cols-1 items-start gap-7 lg:grid-cols-[1fr_320px]">
           {/* Main content */}
           <div className="flex flex-col gap-7">
             {/* Course Overview */}
@@ -246,7 +245,7 @@ export default function CoursePage() {
                 .map((c) => (
                   <Link
                     key={c.slug}
-                    to={`/courses/${c.slug}`}
+                    to={`/${c.slug}`}
                     className="block border-b border-border-soft py-2 text-[13px] text-text-mid transition-colors hover:text-sage"
                   >
                     {c.title}

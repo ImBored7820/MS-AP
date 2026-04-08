@@ -199,7 +199,7 @@ export default function Calendar({ schedule, month }: CalendarProps) {
             </p>
             {popover.slug && (
               <a
-                href={`/courses/${popover.slug}`}
+                href={`/${popover.slug}`}
                 className="mt-2.5 inline-flex items-center gap-1 text-xs font-medium text-sage hover:text-forest"
               >
                 View Course

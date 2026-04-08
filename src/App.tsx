@@ -1,8 +1,8 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import SlugRouter from "./components/SlugRouter";
 
 const HomePage = lazy(() => import("./pages/HomePage"));
-const CoursePage = lazy(() => import("./pages/CoursePage"));
 const SchedulePage = lazy(() => import("./pages/SchedulePage"));
 const PredictorPage = lazy(() => import("./pages/PredictorPage"));
 
@@ -20,9 +20,10 @@ export default function App() {
       <Suspense fallback={<Loading />}>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/courses/:slug" element={<CoursePage />} />
           <Route path="/schedule" element={<SchedulePage />} />
           <Route path="/predictor" element={<PredictorPage />} />
+          {/* /:slug must be last — handles canonical slugs, aliases, and 404s */}
+          <Route path="/:slug" element={<SlugRouter />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

@@ -35,22 +35,22 @@ export default function HomePage() {
     <Shell>
       {/* Hero */}
       <section
-        className="px-7 pb-12 pt-14"
+        className="px-6 pb-12 pt-14 md:px-10"
         style={{
           background: "linear-gradient(180deg, var(--color-sage-pale) 0%, var(--color-bg) 100%)",
         }}
       >
-        <div className="mx-auto max-w-[1200px]">
-          <motion.div {...fade}>
+        <div className="mx-auto flex max-w-[1200px] flex-col items-center text-center">
+          <motion.div {...fade} className="flex flex-col items-center">
             <p className="mb-3 text-[13px] font-semibold uppercase tracking-[0.06em] text-sage">
               2025&ndash;2026 Academic Year
             </p>
-            <h1 className="mb-3.5 font-display text-[44px] font-medium leading-[1.15] tracking-tight text-forest">
+            <h1 className="mb-3.5 font-display text-3xl font-medium leading-[1.15] tracking-tight text-forest sm:text-[44px]">
               Your guide to
               <br />
               Advanced Placement
             </h1>
-            <p className="mb-7 max-w-[480px] text-base leading-[1.65] text-text-mid">
+            <p className="mx-auto mb-7 max-w-[480px] text-base leading-[1.65] text-text-mid">
               Browse all 38 AP courses, check the 2026 exam schedule, and
               estimate your scores. Everything sourced from College Board.
             </p>
@@ -59,7 +59,7 @@ export default function HomePage() {
           <motion.div
             {...fade}
             transition={{ ...fade.transition, delay: 0.08 }}
-            className="flex flex-wrap gap-3"
+            className="flex flex-wrap justify-center gap-3"
           >
             {[
               { val: "38", lbl: "Courses" },
@@ -68,7 +68,7 @@ export default function HomePage() {
             ].map((s) => (
               <div
                 key={s.lbl}
-                className="min-w-[120px] rounded-xl bg-card p-4 px-[22px] shadow-sm"
+                className="min-w-[120px] rounded-xl bg-card px-[22px] py-4 shadow-sm"
               >
                 <div className="font-display text-2xl font-medium text-forest">
                   {s.val}
@@ -83,7 +83,7 @@ export default function HomePage() {
       </section>
 
       {/* Course listing */}
-      <section className="mx-auto max-w-[1200px] px-7 py-10">
+      <section className="mx-auto flex max-w-[1200px] flex-col items-center px-6 py-10 text-center md:px-10">
         <h2 className="mb-1 font-display text-[26px] font-medium text-forest">
           Browse Courses
         </h2>
@@ -91,9 +91,9 @@ export default function HomePage() {
           Select a category or search to find your AP course.
         </p>
 
-        <div className="mb-6 flex flex-wrap items-center gap-3">
+        <div className="mb-6 flex w-full flex-wrap justify-center items-center gap-3">
           {/* Search */}
-          <div className="relative min-w-[260px] max-w-[320px] flex-1">
+          <div className="relative min-w-[220px] max-w-[320px]">
             <svg
               className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light"
               width="15"
@@ -135,7 +135,7 @@ export default function HomePage() {
         </div>
 
         {/* Course grid */}
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))" }}>
+        <div className="w-full grid grid-cols-1 gap-4 text-left sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((course, i) => (
             <CourseCard key={course.slug} course={course} index={i} />
           ))}

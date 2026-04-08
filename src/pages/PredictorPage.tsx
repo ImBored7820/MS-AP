@@ -56,8 +56,8 @@ export default function PredictorPage() {
 
   return (
     <Shell>
-      <section className="mx-auto max-w-[680px] px-7 py-10">
-        <motion.div {...fade}>
+      <section className="mx-auto flex max-w-[680px] flex-col items-center px-7 py-10 text-center">
+        <motion.div {...fade} className="flex flex-col items-center">
           <h2 className="mb-1 font-display text-[26px] font-medium text-forest">
             AP Score Predictor
           </h2>

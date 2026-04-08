@@ -14,8 +14,8 @@ const fade = {
 export default function SchedulePage() {
   return (
     <Shell>
-      <section className="mx-auto max-w-[1200px] px-7 py-10">
-        <motion.div {...fade}>
+      <section className="mx-auto flex max-w-[1200px] flex-col items-center px-6 py-10 text-center md:px-10">
+        <motion.div {...fade} className="flex flex-col items-center">
           <h2 className="mb-1 font-display text-[26px] font-medium text-forest">
             2026 AP Exam Schedule
           </h2>
@@ -28,15 +28,17 @@ export default function SchedulePage() {
         <motion.div
           {...fade}
           transition={{ ...fade.transition, delay: 0.08 }}
-          className="rounded-[14px] border border-border-soft bg-card p-6 shadow-sm"
+          className="overflow-x-auto rounded-[14px] border border-border-soft bg-card p-4 shadow-sm sm:p-6"
         >
-          <Calendar schedule={SCHEDULE} month={MAY_2026} />
+          <div className="min-w-[640px]">
+            <Calendar schedule={SCHEDULE} month={MAY_2026} />
+          </div>
         </motion.div>
 
         <motion.div
           {...fade}
           transition={{ ...fade.transition, delay: 0.16 }}
-          className="mt-4 rounded-xl bg-sage-pale p-[18px] text-[13px] leading-relaxed text-text-mid"
+          className="mt-4 max-w-[640px] rounded-xl bg-sage-pale p-[18px] text-[13px] leading-relaxed text-text-mid"
         >
           <strong className="text-forest">Late Testing:</strong> Available May
           18&ndash;22, 2026 for students with qualifying circumstances. Contact

@@ -1,14 +1,14 @@
 export default function Footer() {
   return (
-    <footer className="mt-16 border-t border-border px-7 py-8">
-      <div className="mx-auto flex max-w-[1200px] flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+    <footer className="mt-16 border-t border-border px-6 py-8 md:px-10">
+      <div className="mx-auto flex max-w-[1200px] flex-wrap items-center justify-between gap-4">
         <div>
           <p className="font-display text-[15px] font-semibold text-forest">
             AP Learning Center
           </p>
           <p className="mt-1 text-xs leading-relaxed text-text-light">
-            Not affiliated with or endorsed by the College Board. AP is a
-            registered trademark of the College Board.
+            Exam dates and course info sourced from College Board. Not
+            affiliated with or endorsed by College Board.
           </p>
         </div>
 
