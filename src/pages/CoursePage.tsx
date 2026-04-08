@@ -136,9 +136,12 @@ export default function CoursePage() {
                 {units.length > 0 ? (
                   <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                     {units.map((unit, i) => (
-                      <div
+                      <Link
                         key={i}
-                        style={{ padding: "12px 16px", background: C.bgWarm, borderRadius: 10, display: "flex", alignItems: "center", gap: 12 }}
+                        to={`/${slug}/Unit-${i + 1}`}
+                        style={{ padding: "12px 16px", background: C.bgWarm, borderRadius: 10, display: "flex", alignItems: "center", gap: 12, textDecoration: "none", transition: "all 0.2s" }}
+                        onMouseEnter={(e) => { e.currentTarget.style.background = C.sagePale; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.background = C.bgWarm; }}
                       >
                         <div style={{ width: 26, height: 26, borderRadius: 7, background: C.sageLight, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: C.sage }}>
                           {i + 1}
@@ -151,7 +154,7 @@ export default function CoursePage() {
                             {unit.summary}
                           </div>
                         </div>
-                      </div>
+                      </Link>
                     ))}
                   </div>
                 ) : (
