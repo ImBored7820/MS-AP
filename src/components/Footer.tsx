@@ -12,7 +12,7 @@ export default function Footer() {
           </p>
         </div>
 
-        <div className="text-right text-xs text-text-light">
+        <div className="text-left sm:text-right text-xs text-text-light">
           <p className="font-medium text-text-mid">
             2026 AP Exams: May 4&ndash;15
           </p>

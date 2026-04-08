@@ -56,7 +56,7 @@ export default function CoursePage() {
   return (
     <Shell>
       {/* Breadcrumb */}
-      <div className="mx-auto flex max-w-[1200px] justify-center items-center gap-2 px-6 pt-3.5 text-[13px] text-text-light md:px-10">
+      <div className="mx-auto flex max-w-[1200px] justify-start items-center gap-2 px-6 pt-3.5 text-[13px] text-text-light md:px-10">
         <Link to="/" className="font-medium text-sage hover:text-forest">
           Courses
         </Link>

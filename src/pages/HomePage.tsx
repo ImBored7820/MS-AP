@@ -35,13 +35,14 @@ export default function HomePage() {
     <Shell>
       {/* Hero */}
       <section
-        className="px-6 pb-12 pt-14 md:px-10"
+        className="px-6 pb-14 pt-14 md:px-10 md:pb-16"
         style={{
-          background: "linear-gradient(180deg, var(--color-sage-pale) 0%, var(--color-bg) 100%)",
+          background:
+            "linear-gradient(180deg, var(--color-sage-pale) 0%, var(--color-bg) 100%)",
         }}
       >
-        <div className="mx-auto flex max-w-[1200px] flex-col items-center text-center">
-          <motion.div {...fade} className="flex flex-col items-center">
+        <div className="mx-auto max-w-[1200px]">
+          <motion.div {...fade}>
             <p className="mb-3 text-[13px] font-semibold uppercase tracking-[0.06em] text-sage">
               2025&ndash;2026 Academic Year
             </p>
@@ -50,7 +51,7 @@ export default function HomePage() {
               <br />
               Advanced Placement
             </h1>
-            <p className="mx-auto mb-7 max-w-[480px] text-base leading-[1.65] text-text-mid">
+            <p className="mb-8 max-w-[480px] text-base leading-[1.65] text-text-mid">
               Browse all 38 AP courses, check the 2026 exam schedule, and
               estimate your scores. Everything sourced from College Board.
             </p>
@@ -59,7 +60,7 @@ export default function HomePage() {
           <motion.div
             {...fade}
             transition={{ ...fade.transition, delay: 0.08 }}
-            className="flex flex-wrap justify-center gap-3"
+            className="flex flex-wrap gap-3"
           >
             {[
               { val: "38", lbl: "Courses" },
@@ -83,7 +84,7 @@ export default function HomePage() {
       </section>
 
       {/* Course listing */}
-      <section className="mx-auto flex max-w-[1200px] flex-col items-center px-6 py-10 text-center md:px-10">
+      <section className="mx-auto max-w-[1200px] px-6 py-10 md:px-10">
         <h2 className="mb-1 font-display text-[26px] font-medium text-forest">
           Browse Courses
         </h2>
@@ -91,9 +92,8 @@ export default function HomePage() {
           Select a category or search to find your AP course.
         </p>
 
-        <div className="mb-6 flex w-full flex-wrap justify-center items-center gap-3">
-          {/* Search */}
-          <div className="relative min-w-[220px] max-w-[320px]">
+        <div className="mb-3 w-full max-w-[420px]">
+          <div className="relative">
             <svg
               className="absolute left-3 top-1/2 -translate-y-1/2 text-text-light"
               width="15"
@@ -115,34 +115,32 @@ export default function HomePage() {
               className="w-full rounded-[10px] border border-border bg-card py-2.5 pl-9 pr-3 text-sm text-text-main outline-none transition-colors focus:border-sage"
             />
           </div>
-
-          {/* Category filters */}
-          <div className="flex flex-wrap gap-1">
-            {["All", ...CATEGORIES.map((c) => c.name)].map((c) => (
-              <button
-                key={c}
-                onClick={() => setCat(c)}
-                className={`rounded-lg border px-3.5 py-1.5 text-[13px] font-medium transition-all ${
-                  cat === c
-                    ? "border-sage bg-sage text-white"
-                    : "border-border bg-card text-text-mid hover:border-sage-light"
-                }`}
-              >
-                {c}
-              </button>
-            ))}
-          </div>
         </div>
 
-        {/* Course grid */}
-        <div className="w-full grid grid-cols-1 gap-4 text-left sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mb-6 flex flex-wrap gap-1.5">
+          {["All", ...CATEGORIES.map((c) => c.name)].map((c) => (
+            <button
+              key={c}
+              onClick={() => setCat(c)}
+              className={`rounded-lg border px-3.5 py-1.5 text-[13px] font-medium transition-all ${
+                cat === c
+                  ? "border-sage bg-sage text-white"
+                  : "border-border bg-card text-text-mid hover:border-sage-light"
+              }`}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((course, i) => (
             <CourseCard key={course.slug} course={course} index={i} />
           ))}
         </div>
 
         {filtered.length === 0 && (
-          <div className="py-12 text-center text-sm text-text-light">
+          <div className="py-12 text-sm text-text-light">
             No courses match your search.
           </div>
         )}

@@ -56,8 +56,8 @@ export default function PredictorPage() {
 
   return (
     <Shell>
-      <section className="mx-auto flex max-w-[680px] flex-col items-center px-7 py-10 text-center">
-        <motion.div {...fade} className="flex flex-col items-center">
+      <section className="mx-auto flex max-w-[680px] flex-col items-center px-6 py-10 md:px-10">
+        <motion.div {...fade} className="flex flex-col items-center text-center">
           <h2 className="mb-1 font-display text-[26px] font-medium text-forest">
             AP Score Predictor
           </h2>
@@ -71,7 +71,7 @@ export default function PredictorPage() {
         <motion.div
           {...fade}
           transition={{ ...fade.transition, delay: 0.06 }}
-          className="rounded-[14px] border border-border-soft bg-card p-7 shadow-sm"
+          className="w-full text-left rounded-[14px] border border-border-soft bg-card p-7 shadow-sm"
         >
           <label className="mb-1.5 block text-xs font-semibold uppercase tracking-[0.04em] text-text-mid">
             Select Course
@@ -229,7 +229,7 @@ export default function PredictorPage() {
         <motion.div
           {...fade}
           transition={{ ...fade.transition, delay: 0.12 }}
-          className="mt-4 rounded-xl bg-sage-pale p-[18px] text-[13px] leading-[1.65] text-text-mid"
+          className="w-full text-left mt-4 rounded-xl bg-sage-pale p-[18px] text-[13px] leading-[1.65] text-text-mid"
         >
           <strong className="text-forest">How this works:</strong> Each AP exam
           weights MC and FRQ sections differently. For example, History exams
